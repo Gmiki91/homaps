@@ -1,0 +1,16 @@
+.homepage {
+    background-color: #9fa09d;
+    padding:1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .container{
+        display:flex;
+        flex-direction: column;       
+    }
+    h1{
+        color:rgb(18, 96, 170)
+    }
+}

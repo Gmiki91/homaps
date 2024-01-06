@@ -1,0 +1,54 @@
+.heatmap {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    .container {
+        display:flex;
+        align-items: center;
+    }
+    EventForm{
+        width: 100rem;
+    }
+    .list {
+        display: grid;
+        grid-gap: 4px;
+
+        .item {
+            height: 10px;
+            width: 10px;
+        }
+
+        .weekly {
+            grid-template-columns: repeat(10, auto);
+        }
+
+        .daily {
+            grid-template-columns: repeat(50, auto);
+        }
+
+        .color0 {
+            background-color: #ffffff;
+        }
+
+        .color1 {
+            background-color: #d4e6f4;
+        }
+
+        .color2 {
+            background-color: #a9ceea;
+        }
+
+        .color3 {
+            background-color: #7eb6e0;
+        }
+
+      
+        .color4 {
+            background-color: #539ed6;
+        }
+
+        .color5 {
+            background-color: #2986cc;
+        }
+    }
+}
