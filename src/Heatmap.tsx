@@ -3,14 +3,14 @@ import { MyEvent, Habit } from "./Models";
 import Tooltip from "./Tooltip";
 type Props = {
   habit: Habit,
-  daysInYear: number
+  onSubmit: () => void
 }
 type HeatMapItem = {
   date: Date,
   event: MyEvent | null
 }
 
-function Heatmap({ daysInYear, habit }: Props) {
+function Heatmap({ habit, onSubmit }: Props) {
 
   const currentYear = 2024;
   /*
@@ -46,18 +46,24 @@ function Heatmap({ daysInYear, habit }: Props) {
     */
     const event = heatMapItem.event;
     const scale = event ? (habit.measure ? Math.round((event.qty! / habit.highestQty!) * 5) : 5) : 0;
-    const colorScale = "color" + scale;
-    const child = <div key={index} className={`${colorScale} item`}></div>;
-    let tooltipText = `${heatMapItem.date.toLocaleDateString()}`;
+    let colorScale = "color" + scale;
+  
+    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE",{ year:"numeric",month: "long",day:"numeric" })}`;
     if (event) {
-      const measureText = habit.measure ? `\n${event.qty} ${habit.unit}\n` : '\n';
-      tooltipText = `${event.note} ${measureText} ${heatMapItem.date.toLocaleDateString()}`;
+      if (event.qty === 0) { 
+        colorScale = "defaultColor"; 
+        tooltipText = `${event.note} ${tooltipText}`;
+      } else {
+        const measureText = habit.measure ? `\n${event.qty} ${habit.unit}\n` : '\n';
+        tooltipText = `${event.note} ${measureText} ${tooltipText}`;
+      }
     }
+    const child = <div key={index} className={`${colorScale} item`}></div>;
     return <Tooltip key={index} text={tooltipText}>{child}</Tooltip>
   });
 
   return <div className="heatmap">
-    <EventForm habit={habit}></EventForm>
+    <EventForm onSubmit={(onSubmit)} habit={habit}></EventForm>
     <div className="container">
       <h3>{habit.title}</h3>
       <span>{currentYear}</span>

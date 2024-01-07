@@ -2,7 +2,11 @@ import { useState } from "react";
 import axios from 'axios';
 import { Habit } from "./Models";
 import SwitchButton from "./SwitchButton";
-export default function HabitForm() {
+
+type Props = {
+  onSubmit: () => void
+}
+export default function HabitForm({onSubmit}:Props) {
   const [formData, setFormData] = useState({} as FormData);
   type FormData = {
     title: string,
@@ -25,7 +29,6 @@ export default function HabitForm() {
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //http call
     const habit: Habit = {
       title: formData.title,
       color: formData.color,
@@ -35,7 +38,13 @@ export default function HabitForm() {
       highestQty: formData.measure ? 1 : 0,
       events: []
     }
-    axios.post('http://localhost:4040/', habit).then(() => { })
+    axios.post('http://localhost:4040/', habit).then(() => {
+      setFormData({  title: "",
+        color: "",
+        freq: "daily",
+        measure: false,
+        unit: ""} as FormData);
+      onSubmit() })
   }
 
   return <form onSubmit={handleSubmit}>
