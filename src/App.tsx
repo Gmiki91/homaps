@@ -1,32 +1,30 @@
-import { useState } from "react";
-import Heatmap  from "./Heatmap";
-import { Habit, MyEvent } from "./Models";
-import { Colors } from "./Colors";
+import { useEffect, useState } from "react";
+import Heatmap from "./Heatmap";
+import { Habit } from "./Models";
 import axios from 'axios';
 import HabitForm from "./HabitForm";
 function App() {
-  const [habits,setHabits] = useState([]as Habit[]);
-  
-  const baszodjalmeg = async()=>{
-    axios.get('http://localhost:4040/').then(response=>{
-      setHabits(response.data.result);
-    })
-  }
-  const year = new Date().getFullYear();
-  const daysInYear = (year % 400 === 0 || year % 100 !== 0 && year % 4 === 0) ? 366 : 365;
-  const daysOfYearArr = [];
-  for (let i = 1; i <= daysInYear; i++) {
-    daysOfYearArr.push(i);
+  const [habits, setHabits] = useState([] as Habit[]);
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  const refresh = async () => {
+    axios.get('http://localhost:4040/')
+      .then(response => {
+        setHabits(response.data.result);
+      })
+      .catch(err => alert(err));
   }
 
   return (
     <div className="homepage">
-      <h1>Welcome to Taudri!</h1>
-      <HabitForm></HabitForm>
+      <h1>Welcome to Homap!</h1>
+      <HabitForm onSubmit={refresh}></HabitForm>
       <div className="container">
-      {habits?.map((habit)=><><Heatmap key={habit.title} habit={habit} daysInYear={habit.freq=="weekly"? 52:daysInYear}></Heatmap></>)}
+        {habits?.map((habit) => <><Heatmap onSubmit={(refresh)} key={habit.title} habit={habit} ></Heatmap></>)}
       </div>
-      <button onClick={baszodjalmeg}>click</button>
     </div>
   )
 
