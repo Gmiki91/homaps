@@ -5,18 +5,17 @@ const app = express();
 
 app.use(json({ limit: '50kb' }));
 const corsOptions = {
-    origin: 'http://localhost:1420',
+    origin: '*',
     optionsSuccessStatus: 200 
 }
 app.use(cors(corsOptions));
 
-const eventSchema = mongoose.Schema({
+const eventSchema ={
     fullDate: Number,
     dayOfYear: Number,
     note: String,
     qty: Number,
-}, { collection: 'events' });
-const Event = mongoose.model('Event', eventSchema);
+}
 
 const habitSchema = mongoose.Schema({
     title: String,
