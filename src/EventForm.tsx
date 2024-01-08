@@ -57,8 +57,10 @@ export default function EventForm({ habit, onSubmit }: Props) {
         placeholder="note"
         autoComplete="off"
       />
+      <div className="flex_row">
       {measurement}
       <input className="button_8" type="submit" value="Submit" />
+      </div>
     </form>
   </div>
 }

@@ -36,7 +36,7 @@ function Heatmap({ habit, onSubmit }: Props) {
   */
   habit.events.forEach(element => heatMapList[element.dayOfYear - 1].event = element);
 
-  const mapType = habit.freq == "daily" ? { gridTemplateColumns: 'repeat(50, auto)' } : { gridTemplateColumns: 'repeat(10, auto)' };
+  //const mapType = habit.freq == "daily" ? { gridTemplateColumns: 'repeat(50, auto)' } : { gridTemplateColumns: 'repeat(10, auto)' };
 
   const list = heatMapList.map((heatMapItem, index) => {
     /*
@@ -70,7 +70,7 @@ function Heatmap({ habit, onSubmit }: Props) {
       <EventForm onSubmit={(onSubmit)} habit={habit}></EventForm>
       <div className="container">
         <span>{currentYear}</span>
-        <div className="list" style={mapType}>
+        <div className="list" >
           {list}
         </div>
       </div>

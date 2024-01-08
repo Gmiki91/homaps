@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import { Habit } from "./Models";
-import SwitchButton from "./SwitchButton";
+//import SwitchButton from "./SwitchButton";
 
 type Props = {
   onSubmit: () => void
@@ -23,9 +23,9 @@ export default function HabitForm({ onSubmit }: Props) {
   const handleCheckbox = () => {
     setFormData(prevData => ({ ...prevData, measure: !prevData.measure }));
   }
-  const handleSwitch = () => {
-    setFormData(prevData => ({ ...prevData, freq: formData.freq == "weekly" ? "daily" : "weekly" }));
-  }
+  // const handleSwitch = () => {
+  //   setFormData(prevData => ({ ...prevData, freq: formData.freq == "weekly" ? "daily" : "weekly" }));
+  // }
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,7 +77,7 @@ export default function HabitForm({ onSubmit }: Props) {
     />
      </div>
     </div>
-    <div className="switch">
+    {/* <div className="switch">
       <label>
         Daily
       </label>
@@ -85,7 +85,7 @@ export default function HabitForm({ onSubmit }: Props) {
       <label>
         Weekly
       </label>
-    </div>
+    </div> */}
     <div className="flex_row">
       <label> Measurement:
       </label>
