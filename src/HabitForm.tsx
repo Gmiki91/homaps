@@ -59,6 +59,7 @@ export default function HabitForm({ onSubmit }: Props) {
     <input
       type="text"
       name="title"
+      autoComplete="off"
       value={formData.title}
       onChange={handleChange}
     />
@@ -70,6 +71,7 @@ export default function HabitForm({ onSubmit }: Props) {
     <input
       type="text"
       name="color"
+      autoComplete="off"
       value={formData.color}
       onChange={handleChange}
     />
@@ -87,7 +89,7 @@ export default function HabitForm({ onSubmit }: Props) {
     <div className="flex_row">
       <label> Measurement:
       </label>
-      <input type="checkbox" name="measure" onChange={handleCheckbox} checked={formData.measure} />
+      <input autoComplete="off" type="checkbox" name="measure" onChange={handleCheckbox} checked={formData.measure} />
     </div>
     {formData.measure ? <div className="flex_row"> <label>
       Unit:
@@ -96,6 +98,7 @@ export default function HabitForm({ onSubmit }: Props) {
         className="unit"
         type="text"
         name="unit"
+        autoComplete="off"
         value={formData.unit}
         onChange={handleChange}
       />

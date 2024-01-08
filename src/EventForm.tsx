@@ -41,7 +41,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
     setFormData(prevData => ({ ...prevData, [name]: value }))
   }
   const measurement = habit.measure ? <div className="measurement">
-    <input className="unit" type="text"  name="qty" value={formData.qty} onChange={handleChange}  />
+    <input autoComplete="off" className="unit" type="text"  name="qty" value={formData.qty} onChange={handleChange}  />
     <label>
       {habit.unit}
     </label>
@@ -55,6 +55,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
         value={formData.note}
         onChange={handleChange}
         placeholder="note"
+        autoComplete="off"
       />
       {measurement}
       <input className="button_8" type="submit" value="Submit" />

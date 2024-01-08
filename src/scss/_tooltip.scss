@@ -24,10 +24,14 @@
         background-color: #192733a6;
         border-radius: 10px;
         padding: 10px 15px;
-        white-space: pre;
+        white-space: pre-line;
         text-align: center;
-        overflow: auto;
-        overflow-x: hidden;
+        width: max-content;
+        max-width: 1000px;
+        max-height: 150px;
+        overflow: scroll;
+        overflow-y: auto;
+         overflow-x: hidden;
         text-overflow: ellipsis;
         height:auto;
         margin-bottom:5px;
