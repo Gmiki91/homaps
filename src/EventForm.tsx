@@ -41,22 +41,21 @@ export default function EventForm({ habit, onSubmit }: Props) {
     setFormData(prevData => ({ ...prevData, [name]: value }))
   }
   const measurement = habit.measure ? <div className="measurement">
-    <input type="text"  name="qty" value={formData.qty} onChange={handleChange}  />
+    <input className="unit" type="text"  name="qty" value={formData.qty} onChange={handleChange}  />
     <label>
       {habit.unit}
     </label>
   </div> : null;
 
-  return <div className="form">
-    <form onSubmit={handleSubmit}>
-      <DatePicker selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+  return <div className="form_container">
+    <form className="event_form" onSubmit={handleSubmit}>
+      <DatePicker className="datepicker" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
       <textarea
         name="note"
         value={formData.note}
         onChange={handleChange}
         placeholder="note"
       />
-
       {measurement}
       <input className="button_8" type="submit" value="Submit" />
     </form>

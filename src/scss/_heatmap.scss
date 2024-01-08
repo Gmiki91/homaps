@@ -1,13 +1,21 @@
 .heatmap {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin: 5px;
+
+    .row{
+        display:flex;
+    }
+    .title{
+        align-self: flex-start;
+    margin-left: 12rem;
+    h3{
+        margin-bottom:0px;
+    }
+    }
     .container {
         display:flex;
         align-items: center;
-    }
-    EventForm{
-        width: 100rem;
     }
     .list {
         display: grid;
@@ -50,7 +58,7 @@
             background-color: #2986cc;
         }
         .defaultColor{
-            background-color: #13354e;
+            background-color: #205377;
         }
     }
 }

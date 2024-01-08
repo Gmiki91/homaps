@@ -4,9 +4,28 @@
 @import 'switchButton';
 @import 'switch';
 @import 'form';
+@import 'button';
 
 body {
     font-size: 1rem;
     line-height: 1.6;
-    background-color: white;
+    background-color: #9fa09d
   }
+ input{
+  background-color: #9fa09d;
+  border:0px;
+  border-bottom: solid 1px black;
+  outline: none;
+
+  }
+  .flex_row{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .flex_column{
+    display:flex;
+    flex-direction: column;
+    
+  }
+  

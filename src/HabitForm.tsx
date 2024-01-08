@@ -6,7 +6,7 @@ import SwitchButton from "./SwitchButton";
 type Props = {
   onSubmit: () => void
 }
-export default function HabitForm({onSubmit}:Props) {
+export default function HabitForm({ onSubmit }: Props) {
   const [formData, setFormData] = useState({} as FormData);
   type FormData = {
     title: string,
@@ -24,7 +24,7 @@ export default function HabitForm({onSubmit}:Props) {
     setFormData(prevData => ({ ...prevData, measure: !prevData.measure }));
   }
   const handleSwitch = () => {
-    setFormData(prevData => ({ ...prevData, freq: formData.freq=="weekly" ? "daily" : "weekly"}));
+    setFormData(prevData => ({ ...prevData, freq: formData.freq == "weekly" ? "daily" : "weekly" }));
   }
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -39,33 +39,42 @@ export default function HabitForm({onSubmit}:Props) {
       events: []
     }
     axios.post('http://localhost:4040/', habit).then(() => {
-      setFormData({  title: "",
+      setFormData({
+        title: "",
         color: "",
         freq: "daily",
         measure: false,
-        unit: ""} as FormData);
-      onSubmit() })
+        unit: ""
+      } as FormData);
+      onSubmit()
+    })
   }
 
-  return <form onSubmit={handleSubmit}>
+  return <form className="habit_form" onSubmit={handleSubmit}>
+    <div className="flex_column">
+      <div className="flex_row">
     <label>
       Title:
-      <input
-        type="text"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-      />
     </label>
+    <input
+      type="text"
+      name="title"
+      value={formData.title}
+      onChange={handleChange}
+    />
+    </div>
+    <div className="flex_row">
     <label>
       Color:
-      <input
-        type="text"
-        name="color"
-        value={formData.color}
-        onChange={handleChange}
-      />
     </label>
+    <input
+      type="text"
+      name="color"
+      value={formData.color}
+      onChange={handleChange}
+    />
+     </div>
+    </div>
     <div className="switch">
       <label>
         Daily
@@ -75,19 +84,24 @@ export default function HabitForm({onSubmit}:Props) {
         Weekly
       </label>
     </div>
-    <label> Measurement:
+    <div className="flex_row">
+      <label> Measurement:
+      </label>
       <input type="checkbox" name="measure" onChange={handleCheckbox} checked={formData.measure} />
-    </label>
-    {formData.measure ? <label>
+    </div>
+    {formData.measure ? <div className="flex_row"> <label>
       Unit:
+    </label>
       <input
+        className="unit"
         type="text"
         name="unit"
         value={formData.unit}
         onChange={handleChange}
       />
-    </label> : null}
-    <input type="submit" value="Submit" />
+    </div> : null}
+
+    <input className="button_8" type="submit" value="Submit" />
   </form>
 
 }

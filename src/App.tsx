@@ -21,10 +21,12 @@ function App() {
   return (
     <div className="homepage">
       <h1>Welcome to Homap!</h1>
-      <HabitForm onSubmit={refresh}></HabitForm>
+      <button className="refresh_btn" onClick={refresh}>&#10227;</button>
       <div className="container">
         {habits?.map((habit) => <><Heatmap onSubmit={(refresh)} key={habit.title} habit={habit} ></Heatmap></>)}
       </div>
+      <h4>New list</h4>
+      <HabitForm onSubmit={refresh}></HabitForm>
     </div>
   )
 

@@ -47,12 +47,12 @@ function Heatmap({ habit, onSubmit }: Props) {
     const event = heatMapItem.event;
     const scale = event ? (habit.measure ? Math.round((event.qty! / habit.highestQty!) * 5) : 5) : 0;
     let colorScale = "color" + scale;
-  
-    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE",{ year:"numeric",month: "long",day:"numeric" })}`;
+
+    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}`;
     if (event) {
-      if (event.qty === 0) { 
-        colorScale = "defaultColor"; 
-        tooltipText = `${event.note} ${tooltipText}`;
+      if (event.qty === 0) {
+        colorScale = "defaultColor";
+        tooltipText = `${event.note}\n ${tooltipText}`;
       } else {
         const measureText = habit.measure ? `\n${event.qty} ${habit.unit}\n` : '\n';
         tooltipText = `${event.note} ${measureText} ${tooltipText}`;
@@ -63,12 +63,16 @@ function Heatmap({ habit, onSubmit }: Props) {
   });
 
   return <div className="heatmap">
-    <EventForm onSubmit={(onSubmit)} habit={habit}></EventForm>
-    <div className="container">
+    <div className="title row">
       <h3>{habit.title}</h3>
-      <span>{currentYear}</span>
-      <div className="list" style={mapType}>
-        {list}
+    </div>
+    <div className="row">
+      <EventForm onSubmit={(onSubmit)} habit={habit}></EventForm>
+      <div className="container">
+        <span>{currentYear}</span>
+        <div className="list" style={mapType}>
+          {list}
+        </div>
       </div>
     </div>
   </div>
