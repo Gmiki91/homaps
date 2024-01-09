@@ -1,3 +1,4 @@
+import { useState } from "react";
 import EventForm from "./EventForm";
 import { MyEvent, Habit } from "./Models";
 import Tooltip from "./Tooltip";
@@ -11,8 +12,7 @@ type HeatMapItem = {
 }
 
 function Heatmap({ habit, onSubmit }: Props) {
-
-  const currentYear = 2024;
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); 
   /*
   Fill year with empty events
   */
@@ -30,11 +30,15 @@ function Heatmap({ habit, onSubmit }: Props) {
 
     return heatMapArr;
   }
-  const heatMapList = getDatesForYear(new Date().getFullYear());
+
+  const heatMapList = getDatesForYear(currentYear);
   /*
   Fill year with past events, -1 to place event on the 0th index
   */
-  habit.events.forEach(element => heatMapList[element.dayOfYear - 1].event = element);
+
+  habit.events
+    .filter(event => new Date(event.fullDate).getFullYear() === currentYear)
+    .forEach(element => heatMapList[element.dayOfYear - 1].event = element);
 
   //const mapType = habit.freq == "daily" ? { gridTemplateColumns: 'repeat(50, auto)' } : { gridTemplateColumns: 'repeat(10, auto)' };
 
@@ -70,9 +74,9 @@ function Heatmap({ habit, onSubmit }: Props) {
       <EventForm onSubmit={(onSubmit)} habit={habit}></EventForm>
       <div className="container">
         <div className="year_selector">
-          <span className="arrow">&#x2190;</span>
+          <span className="arrow" onClick={() => setCurrentYear((prevData) => prevData - 1)}>&#x2190;</span>
           <span>{currentYear}</span>
-          <span className="arrow">&#8594;</span>
+          <span className="arrow" onClick={() => setCurrentYear((prevData) => prevData + 1)}>&#8594;</span>
         </div>
         <div className="list" >
           {list}
