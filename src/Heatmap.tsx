@@ -69,7 +69,11 @@ function Heatmap({ habit, onSubmit }: Props) {
     <div className="row">
       <EventForm onSubmit={(onSubmit)} habit={habit}></EventForm>
       <div className="container">
-        <span>{currentYear}</span>
+        <div className="year_selector">
+          <span className="arrow">&#x2190;</span>
+          <span>{currentYear}</span>
+          <span className="arrow">&#8594;</span>
+        </div>
         <div className="list" >
           {list}
         </div>

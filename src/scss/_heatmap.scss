@@ -1,8 +1,9 @@
+@import 'variables';
 .heatmap {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    @include tile;
     .row {
         display: flex;
     }
@@ -19,6 +20,14 @@
     .container {
         display: flex;
         align-items: center;
+    }
+    .year_selector{
+        margin-bottom:3px;
+        .arrow{
+            margin: 0 5px ;
+            cursor: pointer;
+            font-weight: bold;
+        }
     }
 
     .list {

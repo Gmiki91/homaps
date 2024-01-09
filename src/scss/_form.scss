@@ -5,6 +5,7 @@
 }
 .habit_form{
     width: 220px;
+    @include tile;
 }
 form {
     display: flex;
