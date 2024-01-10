@@ -47,7 +47,7 @@ export default function HabitForm({ onSubmit }: Props) {
         unit: ""
       } as FormData);
       onSubmit()
-    })
+    }).catch(error => alert(error.message));
   }
 
   return <form className="habit_form" onSubmit={handleSubmit}>

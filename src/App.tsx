@@ -15,7 +15,7 @@ function App() {
       .then(response => {
         setHabits(response.data.result);
       })
-      .catch(err => alert(err));
+      .catch(error => alert(error.message));
   }
 
   return (
@@ -23,7 +23,7 @@ function App() {
       <h1>Welcome to Homap!</h1>
       <button className="refresh_btn" onClick={refresh}>&#10227;</button>
       <div className="container">
-        {habits?.map((habit) => <><Heatmap onSubmit={(refresh)} key={habit.title} habit={habit} ></Heatmap></>)}
+        {habits?.map((habit) => <><Heatmap key={habit.title} habitObj={habit} ></Heatmap></>)}
       </div>
       <h4>New list</h4>
       <HabitForm onSubmit={refresh}></HabitForm>
