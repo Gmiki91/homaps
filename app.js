@@ -66,6 +66,12 @@ app.post('/:id', async (req, res) => {
         })
     }
 })
+app.delete('/:habitId',async (req, res) => {
+    await Habit.findByIdAndDelete(new mongoose.Types.ObjectId(req.params.habitId));
+    res.status(200).json({
+        status: 'success'
+    })
+})
 
 app.delete('/:habitId/:eventDate', async (req, res) => {
     const habit = await Habit.findById(new mongoose.Types.ObjectId(req.params.habitId));

@@ -4,15 +4,17 @@ import { MyEvent, Habit } from "./Models";
 import Tooltip from "./Tooltip";
 import axios from "axios";
 import { event } from "@tauri-apps/api";
+import { confirm } from '@tauri-apps/api/dialog';
 type Props = {
   habitObj: Habit,
+  onRemoveHabit: () => void
 }
 type HeatMapItem = {
   date: Date,
   event: MyEvent | null
 }
 
-function Heatmap({ habitObj }: Props) {
+function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [habit, setHabit] = useState({ ...habitObj });
 
@@ -20,12 +22,19 @@ function Heatmap({ habitObj }: Props) {
     axios.get(`http://localhost:4040/${habit._id}`).then((response) => { setHabit(response.data.result) });
   }, [habit]);
 
-
-  const remove = (eventDate: number) => {
-      console.log("hi")
-      axios.delete(`http://localhost:4040/${habit._id}/${eventDate}`).then(() => {
-        submit();
+  const removeHabit = async () => {
+    const confirmation = await confirm('Are you sure you wish to delete this habit?');
+    if (confirmation) {
+      axios.delete(`http://localhost:4040/${habit._id}`).then(() => {
+        onRemoveHabit();
       }).catch(error => alert(error.message));
+    }
+  }
+
+  const removeEvent = (eventDate: number) => {
+    axios.delete(`http://localhost:4040/${habit._id}/${eventDate}`).then(() => {
+      submit();
+    }).catch(error => alert(error.message));
   }
 
   /*
@@ -79,11 +88,12 @@ function Heatmap({ habitObj }: Props) {
       }
     }
     const child = <div key={heatMapItem.date.valueOf()} className={`${colorScale} item`}></div>;
-    return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { remove(event!.fullDate) }}>{child}</Tooltip>
+    return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.fullDate) }}>{child}</Tooltip>
   });
 
   return <div className="heatmap">
-    <div className="title row">
+    <div className="title">
+      <span onClick={removeHabit}>&#x2718;</span>
       <h3>{habit.title}</h3>
     </div>
     <div className="row">
