@@ -1,4 +1,8 @@
-
+@import 'variables';
+.switch{
+  display:flex;
+  align-items: center;
+}
 .ts-input {
     visibility: hidden;
 }
@@ -12,7 +16,7 @@
     display: block;
     height: 15px;
     width: 32px;
-    background: #5899a1;
+    background: $secondary-color;
     border-radius: 100px;
     margin-right: 20px;
     cursor: pointer;
