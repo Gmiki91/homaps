@@ -6,11 +6,11 @@ const app = express();
 app.use(json({ limit: '50kb' }));
 const corsOptions = {
     origin: '*',
-    optionsSuccessStatus: 200 
+    optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions));
 
-const eventSchema ={
+const eventObj = {
     fullDate: Number,
     dayOfYear: Number,
     note: String,
@@ -21,7 +21,7 @@ const habitSchema = mongoose.Schema({
     title: String,
     color: String,
     freq: String,
-    events: [eventSchema],
+    events: [eventObj],
     measure: Boolean,
     unit: String,
     highestQty: Number
@@ -47,15 +47,57 @@ app.post('/', async (req, res) => {
 app.post('/:id', async (req, res) => {
     const habit = await Habit.findById(new mongoose.Types.ObjectId(req.params.id));
     const event = req.body;
+
     if (habit) {
-        habit.events.push(req.body);
+        habit.events.push(event);
         if (habit.highestQty < event.qty)
             habit.highestQty = event.qty;
+
         await habit.save();
+        res.status(200).json({
+            status: 'success',
+            data: habit
+        })
+    } else {
+
+        res.status(400).json({
+            status: 'error',
+            message: 'no habit found'
+        })
     }
+})
+
+app.delete('/:habitId/:eventDate', async (req, res) => {
+    const habit = await Habit.findById(new mongoose.Types.ObjectId(req.params.habitId));
+    const eventDate = req.params.eventDate;
+    let index;
+    habit.events.every((e, i) => {
+        if (e.fullDate == eventDate) {
+            index = i;
+            return false;
+        }
+        return true;
+    });
+    const removedEvent = habit.events.splice(index, 1)[0];
+    if (removedEvent.qty == habit.highestQty) {
+        habit.highestQty = 0;
+        habit.events.forEach(e => {
+            if (e.qty > habit.highestQty)
+                habit.highestQty = e.qty;
+        })
+    }
+
+    await habit.save();
+
+    res.status(200).json({
+        status: 'success'
+    })
+})
+app.get('/:habitId', async (req, res) => {
+    const habit = await Habit.findById(new mongoose.Types.ObjectId(req.params.habitId));
     res.status(200).json({
         status: 'success',
-        data: habit
+        result: habit
     })
 })
 
