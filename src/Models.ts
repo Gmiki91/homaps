@@ -3,8 +3,9 @@ import { Color } from "./Colors";
 export type MyEvent = {
   fullDate: number,
   dayOfYear: number,
+  project:string,
   note: string,
-  qty?: number,
+  qty: number,
 }
 export type Habit = {
   _id?:string;

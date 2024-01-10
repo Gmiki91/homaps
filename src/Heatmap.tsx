@@ -69,26 +69,24 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const emptyList = getDatesForYear(currentYear);
   const filledList = fillYear(emptyList);
   const list = filledList.map((heatMapItem) => {
-   
     const event = heatMapItem.event;
     /*
       -no event for the tile => scale: 0
       -event:yes measure:no => scale:6 (max)
       -event:yes measure:yes => scale:1-5 
     */
-    const scale = event ? (habit.measure && event.qty!>0 ? Math.ceil((event.qty! / habit.highestQty!) * 5) : 6) : 0;
-    const color = Colors[habit.color][scale]
+    const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highestQty) * 5) : 6) : 0;
+    const color = Colors[habit.color][scale];
 
     let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}`;
     if (event) {
-      if (event.qty === 0) {
-        tooltipText = `${event.note}\n ${tooltipText}`;
-      } else {
-        const measureText = habit.measure ? `\n${event.qty} ${habit.unit}\n` : '\n';
-        tooltipText = `${event.note} ${measureText} ${tooltipText}`;
+      if (event.qty > 0) {
+        const measureText = habit.measure ? `${event.qty} ${habit.unit}\n` : '\n';
+        tooltipText = `${measureText} ${tooltipText}\n`;
       }
+      tooltipText = `${event.project}\n${event.note} \n${tooltipText}`;
     }
-    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{backgroundColor:color}}></div>;
+    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{ backgroundColor: color }}></div>;
     return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.fullDate) }}>{child}</Tooltip>
   });
 

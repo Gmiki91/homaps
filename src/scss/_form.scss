@@ -16,7 +16,6 @@ form {
 
 .datepicker {
     width: 70px;
-
 }
 
 .unit {
@@ -30,7 +29,11 @@ textarea {
     height: 80px;
     resize: none;
 }
-
+.project{
+    width: 160px;
+    margin-bottom:1px;
+    background-color: #fff;
+}
 .measurement {
     display: flex;
     margin-bottom: 5px;

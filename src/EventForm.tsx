@@ -9,10 +9,11 @@ type Props = {
 }
 export default function EventForm({ habit, onSubmit }: Props) {
   const [startDate, setStartDate] = useState(new Date());
-  const [formData, setFormData] = useState({ qty: 0 } as FormData);
+  const [formData, setFormData] = useState({ qty: 0, project:habit.events[habit.events.length-1].project } as FormData);
   type FormData = {
     fullDate: number,
     dayOfYear: number,
+    project: string,
     note: string,
     qty?: number,
   }
@@ -31,6 +32,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
       const myEvent: MyEvent = {
         fullDate: startDate.setHours(0, 0, 0, 0).valueOf(),
         dayOfYear: Math.floor((startDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
+        project: formData.project,
         note: formData.note,
         qty: formData.qty || 0,
       }
@@ -38,6 +40,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
         setFormData({
           fullDate: Date.now(),
           dayOfYear: 0,
+          project: formData.project,
           note: "",
           qty: 0
         } as FormData);
@@ -60,12 +63,19 @@ export default function EventForm({ habit, onSubmit }: Props) {
   return <div className="form_container">
     <form className="event_form" onSubmit={handleSubmit}>
       <DatePicker className="datepicker" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+      <input
+       className="project"
+       type="text"
+       name="project"
+       autoComplete="off"
+       placeholder="project name"
+       value={formData.project}
+       onChange={handleChange}/>
       <textarea
         name="note"
         value={formData.note}
         onChange={handleChange}
         placeholder="note"
-        autoComplete="off"
       />
       <div className="flex_row">
         {measurement}

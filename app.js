@@ -13,6 +13,7 @@ app.use(cors(corsOptions));
 const eventObj = {
     fullDate: Number,
     dayOfYear: Number,
+    project: String,
     note: String,
     qty: Number,
 }
