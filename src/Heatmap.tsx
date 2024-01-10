@@ -5,6 +5,7 @@ import Tooltip from "./Tooltip";
 import axios from "axios";
 import { event } from "@tauri-apps/api";
 import { confirm } from '@tauri-apps/api/dialog';
+import { Colors } from "./Colors";
 type Props = {
   habitObj: Habit,
   onRemoveHabit: () => void
@@ -68,26 +69,26 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const emptyList = getDatesForYear(currentYear);
   const filledList = fillYear(emptyList);
   const list = filledList.map((heatMapItem) => {
+   
+    const event = heatMapItem.event;
     /*
       -no event for the tile => scale: 0
-      -event:yes measure:no => scale:10
-      -event:yes measure:yes => scale:x
+      -event:yes measure:no => scale:6 (max)
+      -event:yes measure:yes => scale:1-5 
     */
-    const event = heatMapItem.event;
-    const scale = event ? (habit.measure ? Math.round((event.qty! / habit.highestQty!) * 5) : 5) : 0;
-    let colorScale = "color" + scale;
+    const scale = event ? (habit.measure && event.qty!>0 ? Math.ceil((event.qty! / habit.highestQty!) * 5) : 6) : 0;
+    const color = Colors[habit.color][scale]
 
     let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}`;
     if (event) {
       if (event.qty === 0) {
-        colorScale = "defaultColor";
         tooltipText = `${event.note}\n ${tooltipText}`;
       } else {
         const measureText = habit.measure ? `\n${event.qty} ${habit.unit}\n` : '\n';
         tooltipText = `${event.note} ${measureText} ${tooltipText}`;
       }
     }
-    const child = <div key={heatMapItem.date.valueOf()} className={`${colorScale} item`}></div>;
+    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{backgroundColor:color}}></div>;
     return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.fullDate) }}>{child}</Tooltip>
   });
 

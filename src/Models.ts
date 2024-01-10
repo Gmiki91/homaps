@@ -1,3 +1,5 @@
+import { Color } from "./Colors";
+
 export type MyEvent = {
   fullDate: number,
   dayOfYear: number,
@@ -7,7 +9,7 @@ export type MyEvent = {
 export type Habit = {
   _id?:string;
   title:string,
-  color:string,
+  color:Color,
   freq:"daily"|"weekly",
   events:MyEvent[],
   measure:boolean;

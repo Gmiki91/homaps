@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import { Habit } from "./Models";
+import { Color } from "./Colors";
 //import SwitchButton from "./SwitchButton";
 
 type Props = {
@@ -10,13 +11,13 @@ export default function HabitForm({ onSubmit }: Props) {
   const [formData, setFormData] = useState({} as FormData);
   type FormData = {
     title: string,
-    color: string,
+    color: Color,
     freq: "daily" | "weekly";
     measure: boolean,
     unit?: string
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
     const { name, value } = (event.target);
     setFormData(prevData => ({ ...prevData, [name]: value }))
   }
@@ -41,7 +42,7 @@ export default function HabitForm({ onSubmit }: Props) {
     axios.post('http://localhost:4040/', habit).then(() => {
       setFormData({
         title: "",
-        color: "",
+        color: "blue",
         freq: "daily",
         measure: false,
         unit: ""
@@ -68,13 +69,12 @@ export default function HabitForm({ onSubmit }: Props) {
     <label>
       Color:
     </label>
-    <input
-      type="text"
-      name="color"
-      autoComplete="off"
-      value={formData.color}
-      onChange={handleChange}
-    />
+    <select name="color"  value={formData.color} onChange={handleChange} >
+    <option value="blue">Blue</option>
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+    <option value="yellow">Yellow</option>
+    </select>
      </div>
     </div>
     {/* <div className="switch">
