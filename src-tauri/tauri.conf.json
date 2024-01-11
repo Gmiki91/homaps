@@ -39,9 +39,19 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "homaps",
+        "center": true,
+        "title": "Homaps",
         "width": 1280,
-        "height": 768
+        "height": 768,
+        "visible": false
+      },
+      {
+        "width": 400,
+        "height": 200,
+        "center": true,
+        "decorations": false,
+        "url": "splashscreen.html",
+        "label": "splashscreen"
       }
     ]
   }

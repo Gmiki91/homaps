@@ -3,6 +3,7 @@ import Heatmap from "./Heatmap";
 import { Habit } from "./Models";
 import axios from 'axios';
 import HabitForm from "./HabitForm";
+import { invoke } from '@tauri-apps/api/tauri'
 function App() {
   const [habits, setHabits] = useState([] as Habit[]);
 
@@ -14,6 +15,7 @@ function App() {
     axios.get('http://localhost:4040/')
       .then(response => {
         setHabits(response.data.result);
+        invoke('close_splashscreen');
       })
       .catch(error => alert(error.message));
   }
