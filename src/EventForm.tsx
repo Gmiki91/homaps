@@ -1,15 +1,14 @@
-import axios from "axios";
 import { useState } from "react";
 import { Habit, MyEvent } from "./Models";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 type Props = {
   habit: Habit;
-  onSubmit: () => void;
+  onSubmit: (event:MyEvent) => Promise<boolean>;
 }
 export default function EventForm({ habit, onSubmit }: Props) {
   const [startDate, setStartDate] = useState(new Date());
-  const [formData, setFormData] = useState({ qty: 0, project:habit.events[habit.events.length-1].project } as FormData);
+  const [formData, setFormData] = useState({ qty: 0, project:habit.events[habit.events.length-1]?.project } as FormData);
   type FormData = {
     fullDate: number,
     dayOfYear: number,
@@ -21,7 +20,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
     event.preventDefault();
     let error = false;
     for (let i = 0; i < habit.events.length; i++) {
-      if (habit.events[i].fullDate === startDate.setHours(0, 0, 0, 0).valueOf()) {
+      if (habit.events[i].fullDate === startDate.setHours(0, 0, 0, 0)/100000) {
         alert("There is already an event on this date.");
         error = true;
         break;
@@ -30,23 +29,24 @@ export default function EventForm({ habit, onSubmit }: Props) {
     if (!error) {
       const year = startDate.getFullYear();
       const myEvent: MyEvent = {
-        fullDate: startDate.setHours(0, 0, 0, 0).valueOf(),
+        fullDate: startDate.setHours(0, 0, 0, 0)/100000,
         dayOfYear: Math.floor((startDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
-        project: formData.project,
-        note: formData.note,
-        qty: formData.qty || 0,
+        project: formData.project || "",
+        note: formData.note || "",
+        qty: parseInt(''+formData.qty) || 0,
       }
-      axios.post(`http://localhost:4040/${habit._id}`, myEvent).then(() => {
-        setFormData({
-          fullDate: Date.now(),
-          dayOfYear: 0,
-          project: formData.project,
-          note: "",
-          qty: 0
-        } as FormData);
-        setStartDate(new Date());
-        onSubmit();
-      }).catch(error => alert(error.message));
+        onSubmit(myEvent).then(success => {
+          if(success){
+            setFormData({
+              fullDate: Date.now(),
+              dayOfYear: 0,
+              project: formData.project,
+              note: "",
+              qty: 0
+            } as FormData);
+            setStartDate(new Date());
+          }
+        });
     }
   }
   const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,7 +54,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
     setFormData(prevData => ({ ...prevData, [name]: value }))
   }
   const measurement = habit.measure ? <div className="measurement">
-    <input autoComplete="off" className="unit" type="text" name="qty" value={formData.qty} onChange={handleChange} />
+    <input autoComplete="off" className="unit" type="number" name="qty" min="0" value={formData.qty} onChange={handleChange} />
     <label>
       {habit.unit}
     </label>

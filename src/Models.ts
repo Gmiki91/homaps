@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Color } from "./Colors";
 
 export type MyEvent = {
@@ -8,12 +9,12 @@ export type MyEvent = {
   qty: number,
 }
 export type Habit = {
-  _id?:string;
+  _id:mongoose.Types.ObjectId,
   title:string,
   color:Color,
   freq:"daily"|"weekly",
   events:MyEvent[],
   measure:boolean;
-  unit?:string
+  unit:string
   highestQty:number;
 }

@@ -1,10 +1,8 @@
-import { useCallback, useState } from "react";
+import {  useState } from "react";
 import EventForm from "./EventForm";
 import { MyEvent, Habit } from "./Models";
 import Tooltip from "./Tooltip";
-import axios from "axios";
-import { event } from "@tauri-apps/api";
-import { confirm } from '@tauri-apps/api/dialog';
+import {  invoke } from "@tauri-apps/api";
 import { Colors } from "./Colors";
 type Props = {
   habitObj: Habit,
@@ -14,28 +12,26 @@ type HeatMapItem = {
   date: Date,
   event: MyEvent | null
 }
-
 function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [habit, setHabit] = useState({ ...habitObj });
-
-  const submit = useCallback(() => {
-    axios.get(`http://localhost:4040/${habit._id}`).then((response) => { setHabit(response.data.result) });
-  }, [habit]);
-
-  const removeHabit = async () => {
-    const confirmation = await confirm('Are you sure you wish to delete this habit?');
-    if (confirmation) {
-      axios.delete(`http://localhost:4040/${habit._id}`).then(() => {
-        onRemoveHabit();
-      }).catch(error => alert(error.message));
-    }
+  
+  const addEvent = async (event: MyEvent)=>{
+   return invoke<Habit>('add_event',{obj:event,oid:habitObj._id,})
+    .then(response => {
+      setHabit(response);
+      return Promise.resolve(true);
+    })
+    .catch(error => {
+      alert(error);
+      return Promise.resolve(false);
+    });
   }
 
   const removeEvent = (eventDate: number) => {
-    axios.delete(`http://localhost:4040/${habit._id}/${eventDate}`).then(() => {
-      submit();
-    }).catch(error => alert(error.message));
+    invoke<Habit>('remove_event',{fullDate:eventDate,oid:habitObj._id,})
+    .then(response => setHabit(response))
+    .catch(error => alert(error.message));
   }
 
   /*
@@ -61,7 +57,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const fillYear = (list: HeatMapItem[]) => {
     const responseArr = [...list];
     habit.events
-      .filter(event => new Date(event.fullDate).getFullYear() === currentYear)
+      .filter(event => new Date(event.fullDate*100000).getFullYear() === currentYear)
       .forEach(element => list[element.dayOfYear - 1].event = element);
     return responseArr;
   }
@@ -92,11 +88,11 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
 
   return <div className="heatmap">
     <div className="title">
-      <span onClick={removeHabit}>&#x2718;</span>
+      <span onClick={onRemoveHabit}>&#x2718;</span>
       <h3>{habit.title}</h3>
     </div>
     <div className="row">
-      <EventForm onSubmit={(submit)} habit={habit}></EventForm>
+      <EventForm onSubmit={addEvent} habit={habit}></EventForm>
       <div className="container">
         <div className="year_selector">
           <span className="arrow" onClick={() => setCurrentYear((prevData) => prevData - 1)}>&#x2190;</span>

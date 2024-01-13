@@ -12,9 +12,6 @@
   "dependencies": {
     "@tauri-apps/api": "^1.5.2",
     "@types/react-datepicker": "^4.19.5",
-    "axios": "^1.6.4",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
     "mongoose": "^8.0.3",
     "react": "^18.2.0",
     "react-datepicker": "^4.25.0",
