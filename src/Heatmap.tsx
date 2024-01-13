@@ -31,7 +31,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const removeEvent = (eventDate: number) => {
     invoke<Habit>('remove_event',{fullDate:eventDate,oid:habitObj._id,})
     .then(response => setHabit(response))
-    .catch(error => alert(error.message));
+    .catch(error => alert(error));
   }
 
   /*
@@ -57,11 +57,10 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const fillYear = (list: HeatMapItem[]) => {
     const responseArr = [...list];
     habit.events
-      .filter(event => new Date(event.fullDate*100000).getFullYear() === currentYear)
-      .forEach(element => list[element.dayOfYear - 1].event = element);
+      .filter(event => new Date(event.full_date*100000).getFullYear() === currentYear)
+      .forEach(element => list[element.day_of_year - 1].event = element);
     return responseArr;
   }
-  //const mapType = habit.freq == "daily" ? { gridTemplateColumns: 'repeat(50, auto)' } : { gridTemplateColumns: 'repeat(10, auto)' };
   const emptyList = getDatesForYear(currentYear);
   const filledList = fillYear(emptyList);
   const list = filledList.map((heatMapItem) => {
@@ -71,7 +70,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       -event:yes measure:no => scale:6 (max)
       -event:yes measure:yes => scale:1-5 
     */
-    const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highestQty) * 5) : 6) : 0;
+    const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highest_qty) * 5) : 6) : 0;
     const color = Colors[habit.color][scale];
 
     let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}`;
@@ -83,7 +82,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       tooltipText = `${event.project}\n${event.note} \n${tooltipText}`;
     }
     const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{ backgroundColor: color }}></div>;
-    return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.fullDate) }}>{child}</Tooltip>
+    return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.full_date) }}>{child}</Tooltip>
   });
 
   return <div className="heatmap">

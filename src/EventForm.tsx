@@ -10,8 +10,8 @@ export default function EventForm({ habit, onSubmit }: Props) {
   const [startDate, setStartDate] = useState(new Date());
   const [formData, setFormData] = useState({ qty: 0, project:habit.events[habit.events.length-1]?.project } as FormData);
   type FormData = {
-    fullDate: number,
-    dayOfYear: number,
+    full_date: number,
+    day_of_year: number,
     project: string,
     note: string,
     qty?: number,
@@ -20,7 +20,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
     event.preventDefault();
     let error = false;
     for (let i = 0; i < habit.events.length; i++) {
-      if (habit.events[i].fullDate === startDate.setHours(0, 0, 0, 0)/100000) {
+      if (habit.events[i].full_date === startDate.setHours(0, 0, 0, 0)/100000) {
         alert("There is already an event on this date.");
         error = true;
         break;
@@ -29,8 +29,8 @@ export default function EventForm({ habit, onSubmit }: Props) {
     if (!error) {
       const year = startDate.getFullYear();
       const myEvent: MyEvent = {
-        fullDate: startDate.setHours(0, 0, 0, 0)/100000,
-        dayOfYear: Math.floor((startDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
+        full_date: startDate.setHours(0, 0, 0, 0)/100000,
+        day_of_year: Math.floor((startDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
         project: formData.project || "",
         note: formData.note || "",
         qty: parseInt(''+formData.qty) || 0,
@@ -38,8 +38,8 @@ export default function EventForm({ habit, onSubmit }: Props) {
         onSubmit(myEvent).then(success => {
           if(success){
             setFormData({
-              fullDate: Date.now(),
-              dayOfYear: 0,
+              full_date: Date.now(),
+              day_of_year: 0,
               project: formData.project,
               note: "",
               qty: 0

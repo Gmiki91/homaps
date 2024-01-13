@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { Habit } from "./Models";
 import { Color } from "./Colors";
-import mongoose from "mongoose";
 type Props = {
   onSubmit: (habit: Habit) => Promise<boolean>;
 }
 export default function HabitForm({ onSubmit }: Props) {
   const [formData, setFormData] = useState({} as FormData);
   type FormData = {
-    _id: mongoose.Types.ObjectId
+    _id: number
     title: string,
     color: Color,
-    freq: "daily" | "weekly";
     measure: boolean,
     unit: string
   }
@@ -28,13 +26,12 @@ export default function HabitForm({ onSubmit }: Props) {
     event.preventDefault();
 
     const habit: Habit = {
-      _id: new mongoose.Types.ObjectId(),
+      _id: 0,
       title: formData.title,
       color: formData.color || "blue",
-      freq: formData.freq || "daily",
       measure: formData.measure || false,
       unit: formData.unit || "",
-      highestQty: formData.measure ? 1 : 0,
+      highest_qty: formData.measure ? 1 : 0,
       events: []
     }
 
@@ -43,7 +40,6 @@ export default function HabitForm({ onSubmit }: Props) {
         setFormData({
           title: "",
           color: "blue",
-          freq: "daily",
           measure: false,
           unit: ""
         } as FormData);

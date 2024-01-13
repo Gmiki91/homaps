@@ -3,7 +3,6 @@ import Heatmap from "./Heatmap";
 import { Habit } from "./Models";
 import HabitForm from "./HabitForm";
 import { invoke } from '@tauri-apps/api/tauri'
-import mongoose from "mongoose";
 function App() {
   const [habits, setHabits] = useState([] as Habit[]);
 
@@ -28,7 +27,7 @@ function App() {
     })
   }
 
-  const removeHabit = async (habitId: mongoose.Types.ObjectId) => {
+  const removeHabit = async (habitId: number) => {
     const confirmation = await confirm('Are you sure you wish to delete this habit?');
     if (confirmation) {
       invoke<Habit[]>('remove_habit', { oid: habitId }).then((response) => {
@@ -42,7 +41,7 @@ function App() {
       <h1>Welcome to Homap!</h1>
       <button className="refresh_btn" onClick={refresh}>&#10227;</button>
       <div className="container">
-        {habits?.map((habit) => <Heatmap key={habit.title} habitObj={habit} onRemoveHabit={() => removeHabit(habit._id)} ></Heatmap>)}
+        {habits?.map((habit) => <Heatmap key={habit.title} habitObj={habit} onRemoveHabit={() => removeHabit(habit._id!)} ></Heatmap>)}
       </div>
       <h4>New list</h4>
       <HabitForm onSubmit={addHabit}></HabitForm>
