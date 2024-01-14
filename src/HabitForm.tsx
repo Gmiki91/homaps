@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Habit } from "./Models";
-import { Color } from "./Colors";
+import { Color, Colors } from "./Colors";
 type Props = {
   onSubmit: (habit: Habit) => Promise<boolean>;
 }
 export default function HabitForm({ onSubmit }: Props) {
-  const [formData, setFormData] = useState({} as FormData);
+  const [formData, setFormData] = useState({color:"blue"} as FormData);
   type FormData = {
     _id: number
     title: string,
@@ -28,7 +28,7 @@ export default function HabitForm({ onSubmit }: Props) {
     const habit: Habit = {
       _id: 0,
       title: formData.title,
-      color: formData.color || "blue",
+      color: formData.color,
       measure: formData.measure || false,
       unit: formData.unit || "",
       highest_qty: formData.measure ? 1 : 0,
@@ -67,11 +67,13 @@ export default function HabitForm({ onSubmit }: Props) {
         <label>
           Color:
         </label>
+        {Colors[formData.color] .map((color) =>{
+          return <div key={color} style={{width: "10px", height: "10px", backgroundColor: color}}></div>
+        })}
         <select name="color" value={formData.color} onChange={handleChange} >
-          <option value="blue">Blue</option>
-          <option value="red">Red</option>
-          <option value="green">Green</option>
-          <option value="yellow">Yellow</option>
+          {Object.keys(Color).map(color =>
+             <option value={Color[color as keyof typeof Color]}>{color}</option>
+            )}
         </select>
       </div>
     </div>
