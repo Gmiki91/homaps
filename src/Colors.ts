@@ -1,6 +1,6 @@
 export const Colors = {
     "blue": ["#ffffff", "#d4e6f4", "#a9ceea", "#7eb6e0", "#539ed6", "#2986cc", "#1c5d8e"],
-    "red": ["#ffffff", "#ffcccc", "#ff9999", "#ff6666", "#ff3232", "#ff0000", "#b20000"],
+    "red": ["#ffffff", "#f4cccc", "#ea9999", "#e06666", "#d63232", "#cc0000", "#a30000"],
     "yellow": ["#ffffff", "#ffffb2", "#ffff99", "#ffff66", "#ffff32", "#ffff00", "#cccc00"],
     "green": ["#ffffff", "#cce5cc", "#99cc99", "#66b266", "#329932", "#008000", "#005900"],
     "orange": ["#ffffff", "#ffedcc", "#ffdb99", "#ffc966", "#ffb732", "#ffa500", "#e59400"],

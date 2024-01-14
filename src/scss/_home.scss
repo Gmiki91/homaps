@@ -6,14 +6,10 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-
+    overflow:auto;
     .container {
         display: flex;
         flex-direction: column;
-    }
-
-    h1 {
-        color: $secondary-color
     }
 
     .refresh_btn {
@@ -30,8 +26,7 @@
 
         &:hover,:active,
         :focus {
-            color: $primary-color;
-            background-color: $secondary-color;
+            background-color: $primary-color;
             transition: background-color 250ms ease-in;
         }
         &:active {

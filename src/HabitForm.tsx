@@ -72,7 +72,7 @@ export default function HabitForm({ onSubmit }: Props) {
         })}
         <select name="color" value={formData.color} onChange={handleChange} >
           {Object.keys(Color).map(color =>
-             <option value={Color[color as keyof typeof Color]}>{color}</option>
+             <option key={color} value={Color[color as keyof typeof Color]}>{color}</option>
             )}
         </select>
       </div>

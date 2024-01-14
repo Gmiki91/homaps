@@ -1,13 +1,10 @@
-$primary-color: #dbdbdb;
-$secondary-color: #000086;
-
+$primary-color: #e2e2e2;
+$primary-color-light: #f1f1f1;
+$primary-color-dark: #dadada;
 @mixin tile{
-    background-color: $primary-color;
-    
- 
+    background-color:$primary-color;
     margin:5px;
     padding:15px;
-    border: 1px solid $secondary-color;
     border-radius: 15px;
-    box-shadow: $secondary-color 1px 1px 1px; 
+    box-shadow: black 1px 1px 1px; 
 }

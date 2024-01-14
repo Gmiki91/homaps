@@ -8,17 +8,14 @@
 
 body {
   font-size: 1rem;
-  line-height: 1.6;
-  background-color: #8BC6EC;
-  background-image: linear-gradient(135deg, $primary-color 0%, #bfd3ee 100%);
+  background-color: $primary-color-light;
 }
 
 input {
-  background-color: $primary-color;
+  background:transparent;
   border: 0px;
   border-bottom: solid 1px black;
   outline: none;
-
 }
 
 .flex_row {

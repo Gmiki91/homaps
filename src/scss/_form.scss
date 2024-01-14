@@ -1,3 +1,4 @@
+@import 'variables';
 .event_form {
    
     width:180px;
@@ -26,13 +27,21 @@ form {
 
 textarea {
     width: 160px;
+    padding:5px;
     height: 80px;
     resize: none;
+    background-color: $primary_color_light;
+    border:none;
+    border-radius: 5%;
+
+    &:focus{
+        outline:none
+    }
 }
 .project{
     width: 160px;
     margin-bottom:1px;
-    background-color: #fff;
+    text-align: center;
 }
 .measurement {
     display: flex;
