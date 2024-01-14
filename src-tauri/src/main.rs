@@ -56,13 +56,13 @@ async fn find_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> Result<HabitO
 
 #[tauri::command]
 async fn remove_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> Result<Vec<HabitOrigin>, ()> {
-    sqlx::query("DELETE FROM habits WHERE _id=?")
+    sqlx::query("DELETE FROM events WHERE habit_id=?")
         .bind(oid)
         .execute(&*db)
         .await
         .unwrap();
 
-    sqlx::query("DELETE FROM events WHERE habit_id=?")
+    sqlx::query("DELETE FROM habits WHERE _id=?")
         .bind(oid)
         .execute(&*db)
         .await
@@ -230,7 +230,7 @@ async fn one_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> HabitOrigin {
 
 #[tokio::main]
 async fn main() {
-    const DB_URL: &str = "sqlite://sqlite.db";
+    const DB_URL: &str = "sqlite://data.db";
     if !Sqlite::database_exists(DB_URL).await.unwrap_or(false) {
         println!("Creating database {}", DB_URL);
         match Sqlite::create_database(DB_URL).await {
