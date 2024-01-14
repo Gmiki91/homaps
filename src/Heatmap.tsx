@@ -15,7 +15,8 @@ type HeatMapItem = {
 function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [habit, setHabit] = useState({ ...habitObj });
-  
+  const [selectedDate,setSelectedDate] = useState(new Date());
+
   const addEvent = async (event: MyEvent)=>{
    return invoke<Habit>('add_event',{obj:event,oid:habitObj._id,})
     .then(response => {
@@ -73,7 +74,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
     const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highest_qty) * 6) : 4) : 0;
     const color = Colors[habit.color][scale];
 
-    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })}`;
+    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "2-digit", month: "long", day: "numeric", weekday:"long" })}`;
     if (event) {
       if (event.qty > 0) {
         const measureText = habit.measure ? `${event.qty} ${habit.unit}\n` : '\n';
@@ -81,7 +82,8 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       }
       tooltipText = `${event.project}\n${event.note} \n${tooltipText}`;
     }
-    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{ backgroundColor: color }}></div>;
+    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{ backgroundColor: color, outline: selectedDate.getTime()==heatMapItem.date.getTime() ? "1px solid" : undefined }} 
+    onClick={()=>setSelectedDate(heatMapItem.date)}></div>;
     return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.full_date) }}>{child}</Tooltip>
   });
 
@@ -91,7 +93,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       <h3>{habit.title}</h3>
     </div>
     <div className="row">
-      <EventForm onSubmit={addEvent} habit={habit}></EventForm>
+      <EventForm habit={habit} selectedDate={selectedDate} onSubmit={addEvent} ></EventForm>
       <div className="container">
         <div className="year_selector">
           <span className="arrow" onClick={() => setCurrentYear((prevData) => prevData - 1)}>&#x2190;</span>

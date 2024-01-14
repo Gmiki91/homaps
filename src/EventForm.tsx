@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Habit, MyEvent } from "./Models";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 type Props = {
   habit: Habit;
+  selectedDate: Date;
   onSubmit: (event:MyEvent) => Promise<boolean>;
 }
-export default function EventForm({ habit, onSubmit }: Props) {
-  const [startDate, setStartDate] = useState(new Date());
+export default function EventForm({ habit,selectedDate, onSubmit }: Props) {
   const [formData, setFormData] = useState({ qty: 0, project:habit.events[habit.events.length-1]?.project } as FormData);
   type FormData = {
     full_date: number,
@@ -16,21 +14,22 @@ export default function EventForm({ habit, onSubmit }: Props) {
     note: string,
     qty?: number,
   }
+
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     let error = false;
     for (let i = 0; i < habit.events.length; i++) {
-      if (habit.events[i].full_date === startDate.setHours(0, 0, 0, 0)/100000) {
+      if (habit.events[i].full_date === selectedDate.setHours(0, 0, 0, 0)/100000) {
         alert("There is already an event on this date.");
         error = true;
         break;
       }
     }
     if (!error) {
-      const year = startDate.getFullYear();
+      const year = selectedDate.getFullYear();
       const myEvent: MyEvent = {
-        full_date: startDate.setHours(0, 0, 0, 0)/100000,
-        day_of_year: Math.floor((startDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
+        full_date: selectedDate.setHours(0, 0, 0, 0)/100000,
+        day_of_year: Math.floor((selectedDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
         project: formData.project || "",
         note: formData.note || "",
         qty: parseInt(''+formData.qty) || 0,
@@ -44,7 +43,6 @@ export default function EventForm({ habit, onSubmit }: Props) {
               note: "",
               qty: 0
             } as FormData);
-            setStartDate(new Date());
           }
         });
     }
@@ -62,7 +60,7 @@ export default function EventForm({ habit, onSubmit }: Props) {
 
   return <div className="form_container">
     <form className="event_form" onSubmit={handleSubmit}>
-      <DatePicker className="datepicker" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+      <label className="date">{selectedDate.toLocaleDateString("de-DE", { year: "2-digit", month: "long", day: "numeric", weekday:"long" })}</label>
       <input
        className="project"
        type="text"
