@@ -45,7 +45,6 @@ export default function HabitForm({ onSubmit }: Props) {
         } as FormData);
       }
     });
-
   }
 
   return <form className="habit_form" onSubmit={handleSubmit}>
@@ -67,7 +66,7 @@ export default function HabitForm({ onSubmit }: Props) {
         <label>
           Color:
         </label>
-        {Colors[formData.color] .map((color) =>{
+        {Colors[formData.color].slice(1).map((color) =>{
           return <div key={color} style={{width: "10px", height: "10px", backgroundColor: color}}></div>
         })}
         <select name="color" value={formData.color} onChange={handleChange} >

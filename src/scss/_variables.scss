@@ -1,8 +1,14 @@
-$primary-color: #e2e2e2;
-$primary-color-light: #f1f1f1;
-$primary-color-dark: #dadada;
+$main-color:#F9F7F7;
+$secondary-color:#DBE2EF;
+$accent-color: #3F72AF;
+$fourth-color:#112D4E;
+
+$dark-main-color:#363062;
+$dark-secondary-color:#435585;
+$dark-accent-color:#818FB4;
+$dark-fourth-color:#F5E8C7;
 @mixin tile{
-    background-color:$primary-color;
+    background-color:$secondary-color;
     margin:5px;
     padding:15px;
     border-radius: 15px;

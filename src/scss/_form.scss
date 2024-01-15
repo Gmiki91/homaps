@@ -26,12 +26,16 @@ form {
     height:fit-content;
 }
 
+select{
+    background-color: $main-color;
+}
+
 textarea {
     width: 160px;
     padding:5px;
     height: 80px;
     resize: none;
-    background-color: $primary_color_light;
+    background-color: $main-color;
     border:none;
     border-radius: 5%;
 
