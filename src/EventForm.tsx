@@ -17,7 +17,7 @@ export default function EventForm({ habit, selectedDate, onSubmit }: Props) {
     event.preventDefault();
     let error = false;
     for (let i = 0; i < habit.events.length; i++) {
-      if (habit.events[i].full_date === selectedDate.setHours(0, 0, 0, 0) / 100000) {
+      if (habit.events[i].full_date === selectedDate.setHours(12, 0, 0, 0) / 100000) {
         alert("There is already an event on this date.");
         error = true;
         break;
@@ -26,7 +26,7 @@ export default function EventForm({ habit, selectedDate, onSubmit }: Props) {
     if (!error) {
       const year = selectedDate.getFullYear();
       const myEvent: MyEvent = {
-        full_date: selectedDate.setHours(0, 0, 0, 0) / 100000,
+        full_date: selectedDate.setHours(12, 0, 0, 0) / 100000,
         day_of_year: Math.floor((selectedDate.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
         project: formData.project || "",
         note: formData.note || "",
