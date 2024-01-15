@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use serde::{Deserialize, Serialize};
 use sqlx::{migrate::MigrateDatabase, FromRow, Sqlite, SqlitePool};
-use tauri::{Manager, Window};
 use tokio;
 
 #[derive(Clone, FromRow, Debug, Deserialize, Serialize)]
@@ -32,21 +31,7 @@ struct HabitOrigin {
     highest_qty: u16,
     events: Vec<Event>,
 }
-#[tauri::command]
-async fn close_splashscreen(window: Window) {
-    // Close splashscreen
-    window
-        .get_window("splashscreen")
-        .expect("no window labeled 'splashscreen' found")
-        .close()
-        .unwrap();
-    // Show main window
-    window
-        .get_window("main")
-        .expect("no window labeled 'main' found")
-        .show()
-        .unwrap();
-}
+
 
 #[tauri::command]
 async fn find_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> Result<HabitOrigin, ()> {
@@ -279,8 +264,7 @@ async fn main() {
             add_habit,
             add_event,
             remove_habit,
-            remove_event,
-            close_splashscreen
+            remove_event
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

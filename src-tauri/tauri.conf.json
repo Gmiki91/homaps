@@ -43,15 +43,7 @@
         "title": "Homaps",
         "width": 1280,
         "height": 768,
-        "visible": false
-      },
-      {
-        "width": 800,
-        "height": 800,
-        "center": true,
-        "decorations": false,
-        "url": "splashscreen.html",
-        "label": "splashscreen"
+        "visible": true
       }
     ]
   }

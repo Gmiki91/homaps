@@ -8,7 +8,7 @@ function App() {
 
 
   useEffect(() => {
-    refresh().then(() =>invoke('close_splashscreen'));
+    refresh();
   }, []);
 
   const refresh = async () => {
