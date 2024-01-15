@@ -82,7 +82,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       }
       tooltipText = `${event.project}\n${event.note} \n${tooltipText}`;
     }
-    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{ backgroundColor: color, outline: selectedDate.getTime()==heatMapItem.date.getTime() ? "1px solid" : undefined }} 
+    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={{ backgroundColor: color, outline: selectedDate.setHours(0,0,0,0)==heatMapItem.date.getTime() ? "1px solid" : undefined }} 
     onClick={()=>setSelectedDate(heatMapItem.date)}></div>;
     return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.full_date) }}>{child}</Tooltip>
   });
