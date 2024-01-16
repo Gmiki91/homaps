@@ -60,6 +60,7 @@ export default function HabitForm({ onSubmit }: Props) {
           autoComplete="off"
           value={formData.title}
           onChange={handleChange}
+          placeholder="New list"
         />
       </div>
       <div className="flex_row">
