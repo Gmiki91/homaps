@@ -1,16 +1,13 @@
 $main-color:#F9F7F7;
 $secondary-color:#DBE2EF;
 $accent-color: #3F72AF;
-$fourth-color:#112D4E;
 
-$dark-main-color:#363062;
-$dark-secondary-color:#435585;
-$dark-accent-color:#818FB4;
-$dark-fourth-color:#F5E8C7;
+$box-shadow:0 4px 6px rgba(0,0,0,0.2);
+
 @mixin tile{
     background-color:$secondary-color;
     margin:5px;
     padding:15px;
     border-radius: 15px;
-    box-shadow: black 1px 1px 1px; 
+    box-shadow: $box-shadow;
 }

@@ -13,7 +13,7 @@
         margin-left: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: black transparent  transparent transparent;
+        border-color: $accent-color transparent  transparent transparent;
     }
 
     .bubble_container {
@@ -22,7 +22,7 @@
         z-index: 2;
         color: white;
         font-size: 12px;
-        background-color: rgba($fourth-color,0.7);
+        background-color: rgba($accent-color,0.8);
         border-radius: 10px;
         padding: 10px 15px;
         white-space: pre-line;
@@ -44,7 +44,7 @@
             content: "";
             position: absolute;
             transform: rotate(45deg);
-            background-color: rgba($fourth-color,0.7);
+            background-color: rgba($accent-color,0.8);
             
             z-index: 1;
             top: 100%;
@@ -58,7 +58,7 @@
         }
     }
     &:hover{
-        outline:1px solid black;
+        outline:1px solid;
         cursor:pointer;
        
     }

@@ -21,6 +21,10 @@
             top: 5px;
             right: 10px;
             cursor: pointer;
+            &:hover{
+                color:$accent-color;
+                transform: scale(1.1);
+            }
         }
         
     }
@@ -34,6 +38,10 @@
         .arrow{
             margin: 0 5px ;
             cursor: pointer;
+            &:hover{
+                color:$accent-color;
+                font-weight: bold;
+            }
         }
     }
 
