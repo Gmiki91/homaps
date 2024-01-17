@@ -71,7 +71,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       -event:yes measure:no => scale:4 (middle)
       -event:yes measure:yes => scale:1-6
     */
-    const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highest_qty) * 6) : 4) : 0;
+    const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highest_qty) * 8) : 5) : 0;
     const color = Colors[habit.color][scale];
 
     let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "2-digit", month: "long", day: "numeric", weekday:"long" })}`;
