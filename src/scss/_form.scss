@@ -36,11 +36,10 @@ textarea {
     height: 80px;
     resize: none;
     background-color:rgba($accent-color,0.15);
-    border:2px solid $accent-color;
     border-radius: 5%;
-    box-shadow:$box-shadow;
+    border:none;
     &:focus{
-        outline:none
+        outline:none;
     }
 }
 .project{
