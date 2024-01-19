@@ -3,6 +3,19 @@
 version = 3
 
 [[package]]
+name = "Grind"
+version = "0.0.0"
+dependencies = [
+ "futures",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tauri",
+ "tauri-build",
+ "tokio",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1360,19 +1373,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c49c37c09c17a53d937dfbb742eb3a961d65a994e6bcdcf37e7399d0cc8ab5e"
 dependencies = [
  "digest",
-]
-
-[[package]]
-name = "homaps"
-version = "0.0.0"
-dependencies = [
- "futures",
- "serde",
- "serde_json",
- "sqlx",
- "tauri",
- "tauri-build",
- "tokio",
 ]
 
 [[package]]

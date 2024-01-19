@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Homaps",
+    "productName": "Grind",
     "version": "../package.json"
   },
   "tauri": {
@@ -40,7 +40,7 @@
         "fullscreen": false,
         "resizable": true,
         "center": true,
-        "title": "Homaps",
+        "title": "Grind",
         "width": 1280,
         "height": 768,
         "visible": true

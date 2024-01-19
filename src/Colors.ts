@@ -6,6 +6,7 @@ export const Colors = {
     "orange":   ["#ffffff", "#ffdb99","#ffd27f", "#ffc966","#ffc04c", "#ffb732","#ffae19" ,"#ffa500", "#e59400"],
     "violet":   ["#ffffff",  "#f8cdf8","#f6c0f6", "#f4b4f4", "#f3a7f3","#f19bf1","#ef8eef", "#ee82ee", "#be68be"],
     "black":    ["#ffffff", "#cbcbcb", "#bfbfbf", "#b2b2b2","#a5a5a5", "#989898","#8b8b8b", "#7f7f7f", "#4c4c4c"],
+    "terracotta":    ["#ffffff", "#f3c7be", "#f1b9ae", "#eeab9e","#eb9d8e", "#e88f7e","#e5816e", "#e3735e", "#cc6754"],
 }
 export enum Color {
     Blue = "blue",
@@ -15,4 +16,5 @@ export enum Color {
     Orange = "orange",
     Violet = "violet",
     Black = "black",
+    Terracotta = "terracotta",
 }
