@@ -10,7 +10,7 @@ struct Event {
     day_of_year: u16,
     project: String,
     note: String,
-    qty: u16,
+    qty: u32,
 }
 #[derive(Clone, FromRow, Debug, Deserialize, Serialize)]
 struct Habit {
@@ -19,7 +19,7 @@ struct Habit {
     color: String,
     measure: bool,
     unit: String,
-    highest_qty: u16,
+    highest_qty: u32,
 }
 #[derive(Clone, Serialize, Deserialize)]
 struct HabitOrigin {
@@ -28,7 +28,7 @@ struct HabitOrigin {
     color: String,
     measure: bool,
     unit: String,
-    highest_qty: u16,
+    highest_qty: u32,
     events: Vec<Event>,
 }
 
