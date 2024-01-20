@@ -60,14 +60,12 @@
 
         .summary {
             display: flex;
-            flex-direction: column;
-            width: 30%;
-            margin-top:3px;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            height: 100%;
             div {
-                display:flex;
-                justify-content:space-between;
                 padding:5px;
-                margin:2px;
                 background-color: $accent-color;
                 border: 3px solid $main-color;
                 border-radius: 15%;

@@ -39,11 +39,10 @@ function App() {
   return (
     <div className="homepage">
       <HabitForm onSubmit={addHabit}></HabitForm>
+      <button className="refresh_btn" onClick={refresh}>&#10227;</button>
       <div className="container">
         {habits?.map((habit) => <Heatmap key={habit.title} habitObj={habit} onRemoveHabit={() => removeHabit(habit._id!)} ></Heatmap>)}
       </div>
-      <button className="refresh_btn" onClick={refresh}>&#10227;</button>
-    
     </div>
   )
 

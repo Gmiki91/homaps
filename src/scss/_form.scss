@@ -8,6 +8,9 @@
 .habit_form {
     width: 220px;
     @include tile;
+    .title{
+        @include big_font;
+    }
 }
 
 form {
@@ -26,6 +29,7 @@ form {
     width: 50px;
     margin-right: 5px;
     height: fit-content;
+    @include big_font;
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -59,9 +63,8 @@ textarea {
 
 .project {
     border: none;
-    font-weight: bold;
     margin-bottom: 3px;
-    text-align: center;
+    @include big_font;
 }
 
 .measurement {

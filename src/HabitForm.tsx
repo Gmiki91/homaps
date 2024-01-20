@@ -50,13 +50,11 @@ export default function HabitForm({ onSubmit }: Props) {
   return <form className="habit_form" onSubmit={handleSubmit}>
     <div className="flex_column">
       <div className="flex_row">
-        <label>
-          Title:
-        </label>
         <input
           required
           type="text"
           name="title"
+          className="title"
           autoComplete="off"
           value={formData.title}
           onChange={handleChange}
@@ -64,9 +62,6 @@ export default function HabitForm({ onSubmit }: Props) {
         />
       </div>
       <div className="flex_row">
-        <label>
-          Color:
-        </label>
         {Colors[formData.color].slice(1).map((color) =>{
           return <div key={color} style={{width: "10px", height: "10px", backgroundColor: color}}></div>
         })}
