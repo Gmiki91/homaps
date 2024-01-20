@@ -118,7 +118,6 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
     const child = <div key={heatMapItem.date.valueOf()} className={`item ${selected}`} style={style} onClick={() => setSelectedDate(heatMapItem.date)}></div>;
     return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.full_date) }}>{child}</Tooltip>
   });
-  console.log("check")
 
   return <div className="heatmap">
     <div className="title">
@@ -139,11 +138,11 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
         <div className="summary">
           <div>
             <span>This year's total: </span>
-            <span>{`${yearlyTotal} ${habit.unit || 'x'}`}</span>
+            <span>{habit.unit=="min" ? `${Math.floor(yearlyTotal/60)}h ${yearlyTotal%60}m`:`${yearlyTotal} ${habit.unit || 'days'}`}</span>
           </div>
           <div>
             <span>All time total: </span>
-            <span>{`${allTimeTotal} ${habit.unit || 'x'}`}</span>
+            <span>{habit.unit=="min" ?`${Math.floor(allTimeTotal/60)}h ${allTimeTotal%60}m`:`${allTimeTotal} ${habit.unit || 'days'}`}</span>
           </div>
         </div>
       </div>
