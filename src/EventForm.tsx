@@ -6,7 +6,7 @@ type Props = {
   onSubmit: (event: MyEvent) => Promise<boolean>;
 }
 export default function EventForm({ habit, selectedDate, onSubmit }: Props) {
-  const [formData, setFormData] = useState({ note: "", qty: 0, project: habit.events[habit.events.length - 1]?.project } as FormData);
+  const [formData, setFormData] = useState({ note: "", project: habit.events[habit.events.length - 1]?.project } as FormData);
   type FormData = {
     project: string,
     note: string,
@@ -57,25 +57,25 @@ export default function EventForm({ habit, selectedDate, onSubmit }: Props) {
         type="text"
         name="project"
         autoComplete="off"
-        placeholder="project name"
+        placeholder="project name ..."
         value={formData.project}
         onChange={handleChange} />
       <textarea
         name="note"
         value={formData.note}
         onChange={handleChange}
-        placeholder="note"
+        placeholder="note ..."
       />
       <label className="date">{selectedDate.toLocaleDateString("de-DE", { year: "2-digit", month: "short", day: "numeric", weekday: "long" })}</label>
       <div className="flex_row">
         {habit.measure ? <div className="measurement">
-          <input autoComplete="off" className="unit" type="number" name="qty" min="0" value={formData.qty} onChange={handleChange} />
+          <input autoComplete="off" className="unit" placeholder="0" type="number" name="qty" min="1" required value={formData.qty} onChange={handleChange} />
           <label>
             {habit.unit}
           </label>
         </div> : null}
-        <input className="button_8" type="submit" value="Submit" />
       </div>
+        <input className="button_8" type="submit" value="Submit" />
     </form>
   </div>
 }
