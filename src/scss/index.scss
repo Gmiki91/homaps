@@ -15,8 +15,14 @@ body {
 input {
   background:transparent;
   border: 0px;
-  border-bottom: solid 1px $accent-color;
+  border-bottom: solid 1px $main-color;
   outline: none;
+  &::placeholder{
+    color:$main-color;
+  }
+  &:focus::placeholder{
+    color:transparent;
+  }
 }
 
 .flex_row {

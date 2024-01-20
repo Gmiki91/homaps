@@ -3,17 +3,17 @@
 .button_8 {
     font-weight: bold;
     width: auto;
+    color:$secondary-color;
     background-color: $main-color;
     cursor: pointer;
     padding: 4px .4em;
     text-align: center;
     margin: 3px;
     border-radius: .675rem;
-    border:1px solid $accent-color;
     position: relative;
     &:hover {
         transform: scale(1.05);
-        background-color: rgba($accent-color,0.7);
+        background-color: $accent-color;
         color:$main-color;
     }
 
