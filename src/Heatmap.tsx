@@ -1,46 +1,69 @@
-import {  useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EventForm from "./EventForm";
 import { MyEvent, Habit } from "./Models";
 import Tooltip from "./Tooltip";
-import {  invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api";
 import { Colors } from "./Colors";
 type Props = {
   habitObj: Habit,
   onRemoveHabit: () => void
 }
+
 type HeatMapItem = {
   date: Date,
   event: MyEvent | null
 }
+
 function Heatmap({ habitObj, onRemoveHabit }: Props) {
+  const [filledList, setFilledList] = useState<HeatMapItem[]>([]);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [habit, setHabit] = useState({ ...habitObj });
-  const [selectedDate,setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [yearlyTotal, setYearlyTotal] = useState(0);
+  const [allTimeTotal, setAllTimeTotal] = useState(0);
 
-  const addEvent = async (event: MyEvent)=>{
-   return invoke<Habit>('add_event',{obj:event,oid:habitObj._id,})
-    .then(response => {
-      setHabit(response);
-      return Promise.resolve(true);
-    })
-    .catch(error => {
-      alert(error);
-      return Promise.resolve(false);
-    });
+
+  useEffect(() => {
+    let total = 0;
+    if (habit.measure) {
+      habit.events.forEach(event => {
+        total += event.qty;
+      });
+    } else {
+      total = habit.events.length;
+    }
+    setAllTimeTotal(total);
+  }, [habit])
+
+  useEffect(() => {
+    const emptyList = getDatesForYear();
+    fillYear(emptyList);
+  }, [currentYear, habit])
+
+  const addEvent = async (event: MyEvent) => {
+    return invoke<Habit>('add_event', { obj: event, oid: habitObj._id, })
+      .then(response => {
+        setHabit(response);
+        return Promise.resolve(true);
+      })
+      .catch(error => {
+        alert(error);
+        return Promise.resolve(false);
+      });
   }
 
   const removeEvent = (eventDate: number) => {
-    invoke<Habit>('remove_event',{fullDate:eventDate,oid:habitObj._id,})
-    .then(response => setHabit(response))
-    .catch(error => alert(error));
+    invoke<Habit>('remove_event', { fullDate: eventDate, oid: habitObj._id, })
+      .then(response => setHabit(response))
+      .catch(error => alert(error));
   }
 
   /*
   Fill year with empty events
   */
-  function getDatesForYear(year: number) {
-    const startDate = new Date(year, 0, 1); // January 1st of the specified year
-    const endDate = new Date(year + 1, 0, 0); // December 31st of the specified year
+  const getDatesForYear = useCallback(() => {
+    const startDate = new Date(currentYear, 0, 1); // January 1st of the specified year
+    const endDate = new Date(currentYear + 1, 0, 0); // December 31st of the specified year
 
     const heatMapArr: HeatMapItem[] = [];
     let currentDate = startDate;
@@ -50,20 +73,24 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return heatMapArr;
-  }
+  }, [currentYear])
 
   /*
   Fill year with past events, -1 to place event on the 0th index
   */
-  const fillYear = (list: HeatMapItem[]) => {
+  const fillYear = useCallback((list: HeatMapItem[]) => {
     const responseArr = [...list];
-    habit.events
-      .filter(event => new Date(event.full_date*100000).getFullYear() === currentYear)
-      .forEach(element => list[element.day_of_year - 1].event = element);
-    return responseArr;
-  }
-  const emptyList = getDatesForYear(currentYear);
-  const filledList = fillYear(emptyList);
+    const eventsInThisYear = habit.events.filter(event => new Date(event.full_date * 100000).getFullYear() === currentYear);
+    let count = 0;
+    eventsInThisYear.forEach(element => {
+      count += element.qty;
+      list[element.day_of_year - 1].event = element;
+    });
+    count = habit.measure ? count : eventsInThisYear.length;
+    setYearlyTotal(count);
+    setFilledList(responseArr);
+  }, [habit, currentYear]);
+
   const list = filledList.map((heatMapItem) => {
     const event = heatMapItem.event;
     /*
@@ -71,26 +98,27 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       -event:yes measure:no => scale:6 (middleish)
       -event:yes measure:yes => scale:1-8
     */
-    const scale = event ? (habit.measure && event.qty > 0 ? Math.ceil((event.qty / habit.highest_qty) * 8) : 6) : 0;
+    const scale = event ? (habit.measure ? Math.ceil((event.qty / habit.highest_qty) * 8) : 6) : 0;
     const color = Colors[habit.color][scale];
 
-    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "2-digit", month: "long", day: "numeric", weekday:"long" })}`;
+    let tooltipText = `${heatMapItem.date.toLocaleDateString("de-DE", { year: "2-digit", month: "long", day: "numeric", weekday: "long" })}`;
+
     if (event) {
-      if (event.qty > 0) {
-        const measureText = habit.measure ? `${event.qty} ${habit.unit}\n` : '\n';
+      if (habit.measure) {
+        const measureText = `${event.qty} ${habit.unit}\n`;
         tooltipText = `${measureText} ${tooltipText}\n`;
       }
-      if(event.note!=""){
+      if (event.note != "") {
         tooltipText = `\n${event.note}\n\n${tooltipText}`;
       }
       tooltipText = `${event.project}\n${tooltipText}`;
     }
-   let style:{backgroundColor?:string,outline:string|undefined} = {outline:selectedDate.setHours(0,0,0,0)==heatMapItem.date.getTime() ? `1px solid` : undefined};
-   scale>0 ? style.backgroundColor= color : null;
-    const child = <div key={heatMapItem.date.valueOf()} className={`item`} style={style} 
-    onClick={()=>setSelectedDate(heatMapItem.date)}></div>;
+    const selected = selectedDate.setHours(0, 0, 0, 0) == heatMapItem.date.getTime() ? "selected" : "";
+    const style = { backgroundColor: scale > 0 ? color : "" };
+    const child = <div key={heatMapItem.date.valueOf()} className={`item ${selected}`} style={style} onClick={() => setSelectedDate(heatMapItem.date)}></div>;
     return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.full_date) }}>{child}</Tooltip>
   });
+  console.log("check")
 
   return <div className="heatmap">
     <div className="title">
@@ -107,6 +135,16 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
         </div>
         <div className="list" >
           {list}
+        </div>
+        <div className="summary">
+          <div>
+            <span>This year's total: </span>
+            <span>{`${yearlyTotal} ${habit.unit || 'x'}`}</span>
+          </div>
+          <div>
+            <span>All time total: </span>
+            <span>{`${allTimeTotal} ${habit.unit || 'x'}`}</span>
+          </div>
         </div>
       </div>
     </div>

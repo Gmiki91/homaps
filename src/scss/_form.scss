@@ -1,13 +1,15 @@
 @import 'variables';
+
 .event_form {
-   
-    width:180px;
+    width: 180px;
     align-items: center;
 }
-.habit_form{
+
+.habit_form {
     width: 220px;
     @include tile;
 }
+
 form {
     display: flex;
     flex-direction: column;
@@ -23,32 +25,50 @@ form {
 .unit {
     width: 50px;
     margin-right: 5px;
-    height:fit-content;
+    height: fit-content;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
 
-select{
+select {
     background-color: $main-color;
+    color: $secondary-color;
 }
 
 textarea {
     width: 160px;
-    padding:5px;
+    padding: 5px;
     height: 80px;
     resize: none;
-    background-color:rgba($accent-color,0.15);
+    background-color: $accent-color;
     border-radius: 5%;
-    border:none;
-    &:focus{
-        outline:none;
+    border: none;
+    &:focus {
+        outline: none;
+        &::placeholder {
+            color: transparent;
+        }
+    }
+    &::placeholder {
+        color: $main-color;
     }
 }
-.project{
-    border:none;
+
+.project {
+    border: none;
     font-weight: bold;
-    margin-bottom:3px;
+    margin-bottom: 3px;
     text-align: center;
 }
+
 .measurement {
     display: flex;
     margin-bottom: 5px;
+}
+
+.measure_box {
+    opacity: 0.8;
 }

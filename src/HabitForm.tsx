@@ -80,7 +80,7 @@ export default function HabitForm({ onSubmit }: Props) {
     <div className="flex_row">
       <label> Measurement:
       </label>
-      <input autoComplete="off" type="checkbox" name="measure" onChange={handleCheckbox} checked={formData.measure} />
+      <input autoComplete="off" type="checkbox" className="measure_box" name="measure" onChange={handleCheckbox} checked={formData.measure} />
     </div>
     {formData.measure ? <div className="flex_row"> <label>
       Unit:

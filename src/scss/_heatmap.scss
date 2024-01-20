@@ -1,13 +1,13 @@
 @import 'variables';
+
 .heatmap {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     @include tile;
-    
     .row {
-        display: flex; 
+        display: flex;
     }
 
     .title {
@@ -16,44 +16,67 @@
             top: -15px;
             left: 204px;
         }
-        span{
+        span {
             position: absolute;
             top: 5px;
             right: 10px;
             cursor: pointer;
-            &:hover{
-                color:$accent-color;
+            &:hover {
+                color: $accent-color;
                 transform: scale(1.1);
             }
         }
-        
     }
 
     .container {
         display: flex;
         align-items: center;
-    }
-    .year_selector{
-        margin-bottom:3px;
-        .arrow{
-            margin: 0 5px ;
-            cursor: pointer;
-            &:hover{
-                color:$accent-color;
-                font-weight: bold;
+        .year_selector {
+            margin-bottom: 3px;
+            .arrow {
+                margin: 0 5px;
+                cursor: pointer;
+                &:hover {
+                    color: $accent-color;
+                    font-weight: bold;
+                }
             }
         }
-    }
 
-    .list {
-        display: grid;
-        grid-gap: 4px;
-        grid-template-rows: repeat(7, auto);
-        grid-auto-flow: column;
-        .item {
-            height: 10px;
-            width: 10px;
-            background-color: $main-color;
+        .list {
+            display: grid;
+            grid-gap: 4px;
+            grid-template-rows: repeat(7, auto);
+            grid-auto-flow: column;
+            .item {
+                height: 10px;
+                width: 10px;
+                background-color: $main-color;
+            }
+            .selected {
+                outline: 1px solid $accent-color
+            }
+        }
+
+        .summary {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            margin-top:3px;
+            div {
+                display:flex;
+                justify-content:space-between;
+                padding:5px;
+                margin:2px;
+                background-color: $accent-color;
+                border: 3px solid $main-color;
+                border-radius: 15%;
+                span {
+                    font-weight: bold;
+                }
+            }
+
+
         }
     }
 }
