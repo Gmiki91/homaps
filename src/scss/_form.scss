@@ -50,6 +50,7 @@ textarea {
     background-color: $accent-color;
     border-radius: 5%;
     border: none;
+    overflow:hidden;
     &:focus {
         outline: none;
         &::placeholder {
@@ -64,6 +65,7 @@ textarea {
 .project {
     border: none;
     margin-bottom: 3px;
+    width: 160px;
     @include big_font;
 }
 

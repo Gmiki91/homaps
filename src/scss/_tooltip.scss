@@ -30,9 +30,7 @@
         width: max-content;
         max-width: 500px;
         max-height: 150px;
-        overflow: scroll;
         overflow-y: auto;
-         overflow-x: hidden;
         text-overflow: ellipsis;
         height:auto;
         margin-bottom:5px;
@@ -45,7 +43,6 @@
             position: absolute;
             transform: rotate(45deg);
             background-color: rgba($accent-color,0.9);
-            
             z-index: 1;
             top: 100%;
             left: 50%;
@@ -58,7 +55,7 @@
         }
     }
     &:hover{
-        outline:1px solid $accent-color;
+        outline:3px solid $accent-color;
         cursor:pointer;
        
     }
