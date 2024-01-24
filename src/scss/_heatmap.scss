@@ -60,7 +60,7 @@
                 background-color: $main-color;
             }
             .selected {
-                outline: 1px solid $accent-color
+                outline: 3px solid $accent-color
             }
         }
 
@@ -71,7 +71,10 @@
             width: 100%;
             height: 100%;
             div {
-                padding:5px;
+                min-width: 135px;
+                display:flex;
+                justify-content: space-between;
+                padding:5px 10px;
                 background-color: $accent-color;
                 border: 3px solid $main-color;
                 border-radius: 15%;
