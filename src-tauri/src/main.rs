@@ -20,6 +20,7 @@ struct Habit {
     measure: bool,
     unit: String,
     highest_qty: u32,
+    median: u32,
 }
 #[derive(Clone, Serialize, Deserialize)]
 struct HabitOrigin {
@@ -29,9 +30,9 @@ struct HabitOrigin {
     measure: bool,
     unit: String,
     highest_qty: u32,
+    median: u32,
     events: Vec<Event>,
 }
-
 
 #[tauri::command]
 async fn find_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> Result<HabitOrigin, ()> {
@@ -65,13 +66,14 @@ async fn add_habit(
 ) -> Result<Vec<HabitOrigin>, ()> {
     print!("{}", obj.measure);
     sqlx::query(
-        "INSERT INTO habits (title, color, measure, unit, highest_qty)VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO habits (title, color, measure, unit, highest_qty,median)VALUES (?, ?, ?, ?, ?,?)",
     )
     .bind(obj.title)
     .bind(obj.color)
     .bind(obj.measure)
     .bind(obj.unit)
     .bind(obj.highest_qty)
+    .bind(obj.median)
     .execute(&*db)
     .await
     .unwrap();
@@ -103,7 +105,7 @@ async fn add_event(
     .bind(obj.day_of_year)
     .execute(&*db)
     .await;
-    let mut habit = one_habit(db.clone(), oid).await;
+    let mut habit = get_habit_with_updated_median(db.clone(), oid).await;
 
     if obj.qty > habit.highest_qty {
         habit.highest_qty = obj.qty;
@@ -136,7 +138,7 @@ async fn remove_event(
         .execute(&*db)
         .await;
 
-    let mut habit = one_habit(db.clone(), oid).await;
+    let mut habit = get_habit_with_updated_median(db.clone(), oid).await;
 
     if habit.highest_qty == qty {
         habit.highest_qty = 0;
@@ -181,6 +183,7 @@ async fn all_habits(db: tauri::State<'_, SqlitePool>) -> Vec<HabitOrigin> {
             unit: habit.unit.clone(),
             highest_qty: habit.highest_qty,
             events: result_events,
+            median: habit.median,
         };
         results.push(result);
     }
@@ -208,11 +211,30 @@ async fn one_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> HabitOrigin {
         unit: result_habit.unit,
         highest_qty: result_habit.highest_qty,
         events: result_events,
+        median: result_habit.median,
     };
 
     return result;
 }
-
+async fn get_habit_with_updated_median(db: tauri::State<'_, SqlitePool>, oid: u32) -> HabitOrigin {
+    let mut habit = one_habit(db.clone(), oid).await;
+    if habit.measure {
+        habit.events.sort_by(|a, b| b.qty.cmp(&a.qty));
+        let arr_size = habit.events.len();
+        let median;
+        if arr_size % 2 == 0 {
+            median = habit.events[arr_size / 2].qty;
+        } else {
+            median = habit.events[(arr_size - 1) / 2].qty;
+        }
+        sqlx::query("UPDATE habits SET median = ? WHERE _id = ?")
+            .bind(median)
+            .bind(oid)
+            .execute(&*db)
+            .await;
+    }
+    return habit;
+}
 #[tokio::main]
 async fn main() {
     const DB_URL: &str = "sqlite://data.db";
@@ -251,7 +273,8 @@ async fn main() {
         color       TEXT,
         measure     BOOL,
         unit        TEXT,
-        highest_qty INTEGER);",
+        highest_qty INTEGER,
+        median      INTEGER);",
     )
     .execute(&db)
     .await

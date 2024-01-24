@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Habit } from "./Models";
-import { Color, Colors } from "./Colors";
+import { Color } from "./Colors";
 type Props = {
   onSubmit: (habit: Habit) => Promise<boolean>;
 }
@@ -32,6 +32,7 @@ export default function HabitForm({ onSubmit }: Props) {
       measure: formData.measure || false,
       unit: formData.unit || "",
       highest_qty: formData.measure ? 1 : 0,
+      median: formData.measure ? 1 : 0,
       events: []
     }
 
@@ -60,16 +61,6 @@ export default function HabitForm({ onSubmit }: Props) {
           onChange={handleChange}
           placeholder="New list"
         />
-      </div>
-      <div className="flex_row">
-        {Colors[formData.color].slice(1).map((color) =>{
-          return <div key={color} style={{width: "10px", height: "10px", backgroundColor: color}}></div>
-        })}
-        <select name="color" value={formData.color} onChange={handleChange} >
-          {Object.keys(Color).map(color =>
-             <option key={color} value={Color[color as keyof typeof Color]}>{color}</option>
-            )}
-        </select>
       </div>
     </div>
     <div className="flex_row">

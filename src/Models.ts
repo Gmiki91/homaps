@@ -15,4 +15,5 @@ export type Habit = {
   measure:boolean;
   unit:string
   highest_qty:number;
+  median:number;
 }
