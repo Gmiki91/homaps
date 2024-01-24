@@ -38,7 +38,7 @@
     "windows": [
       {
         "fullscreen": false,
-        "resizable": true,
+        "resizable": false,
         "center": true,
         "title": "Grind",
         "width": 1280,
