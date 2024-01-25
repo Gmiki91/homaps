@@ -43,6 +43,18 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
     fillYear(emptyList);
   }, [currentYear, habit])
 
+  const onMouseDown = async(e: React.MouseEvent<HTMLDivElement, MouseEvent>, item:HeatMapItem) =>{
+    e.preventDefault();
+    if(e.button==0){
+      setSelectedDate(item.date)
+    }else if (e.button==2 && item.event){
+      const confirmation = await confirm('Are you sure you wish to delete this item?');
+      if (confirmation) {
+        removeEvent(item.event.full_date);
+      }
+    }
+
+  }
   const addEvent = async (event: MyEvent) => {
     return invoke<Habit>('add_event', { obj: event, oid: habitObj._id, })
       .then(response => {
@@ -153,8 +165,8 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       boxShadow: heatMapItem.date.getMonth() == hoverMonth ? "0px 0px 4px 3px grey" : "",
       backgroundColor: scale > 0 ? color : ""
     }
-    const child = <div key={heatMapItem.date.valueOf()} className={`item ${selected} `} style={style} onClick={() => setSelectedDate(heatMapItem.date)}></div>;
-    return <Tooltip empty={event == null} key={heatMapItem.date.valueOf()} text={tooltipText} remove={() => { removeEvent(event!.full_date) }}>{child}</Tooltip>
+    const child = <div key={heatMapItem.date.valueOf()} className={`item ${selected} `} style={style} onMouseDown={(e) => onMouseDown(e,heatMapItem)}></div>;
+    return <Tooltip key={heatMapItem.date.valueOf()} text={tooltipText}>{child}</Tooltip>
   });
 
   return <div className="heatmap">
