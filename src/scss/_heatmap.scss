@@ -62,6 +62,9 @@
             .selected {
                 outline: 3px solid $accent-color
             }
+            .hole{
+                background-color:$secondary-color;
+            }
         }
 
         .summary {

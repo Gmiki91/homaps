@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import EventForm from "./EventForm";
 import { MyEvent, Habit } from "./Models";
 import Tooltip from "./Tooltip";
@@ -28,32 +28,38 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const [monthlyTotal, setMonthlyTotal] = useState(0);
   const [yearlyTotal, setYearlyTotal] = useState(0);
   const [allTimeTotal, setAllTimeTotal] = useState(0);
+  const [holesAtYearStart, setHolesAtYearStart] = useState(0); //0-6 = Sunday-Saturday
 
   useEffect(() => {
-    const monthlyCount = getCounter("monthly", 0, currentMonth)
-    const yearlyCount = getCounter("yearly", 0, 0)
-    const totalCount = getCounter("alltime", 0, 0)
-    setMonthlyTotal(monthlyCount);
-    setYearlyTotal(yearlyCount);
+    const totalCount = getCounter("alltime", 0, 0);
     setAllTimeTotal(totalCount);
+    updateYear(0);
   }, [habit])
 
-  useEffect(() => {
-    const emptyList = getDatesForYear();
-    fillYear(emptyList);
-  }, [currentYear, habit])
+  const updateYear=(yearChange:number)=>{
+    const yearlyCount = getCounter("yearly", yearChange, 0);
+    const monthlyCount = getCounter("monthly", yearChange, currentMonth);
+    const firstDayOfYear = new Date(currentYear + yearChange, 0, 1).getDay();
+    let holes = 6; //sunday
+    if (firstDayOfYear != 0) //not sunday
+      holes = firstDayOfYear - 1;
 
-  const onMouseDown = async(e: React.MouseEvent<HTMLDivElement, MouseEvent>, item:HeatMapItem) =>{
+    fillYear(currentYear + yearChange);
+    setHolesAtYearStart(holes);
+    setMonthlyTotal(monthlyCount);
+    setYearlyTotal(yearlyCount);
+  }
+
+  const onMouseDown = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item: HeatMapItem) => {
     e.preventDefault();
-    if(e.button==0){
+    if (e.button == 0) {
       setSelectedDate(item.date)
-    }else if (e.button==2 && item.event){
+    } else if (e.button == 2 && item.event) {
       const confirmation = await confirm('Are you sure you wish to delete this item?');
       if (confirmation) {
         removeEvent(item.event.full_date);
       }
     }
-
   }
   const addEvent = async (event: MyEvent) => {
     return invoke<Habit>('add_event', { obj: event, oid: habitObj._id, })
@@ -74,11 +80,8 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   }
 
   const changeYear = (i: number) => {
-    const yearlyCount = getCounter("yearly", i, 0);
-    const monthlyCount = getCounter("monthly", i, currentMonth);
+    updateYear(i);
     setCurrentYear((prevData) => prevData + i);
-    setMonthlyTotal(monthlyCount);
-    setYearlyTotal(yearlyCount);
   }
 
   const changeMonth = (i: number) => {
@@ -109,9 +112,9 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   /*
   Fill year with empty events
   */
-  const getDatesForYear = useCallback(() => {
-    const startDate = new Date(currentYear, 0, 1); // January 1st of the specified year
-    const endDate = new Date(currentYear + 1, 0, 0); // December 31st of the specified year
+  const getDatesForYear = (year:number) => {
+    const startDate = new Date(year , 0, 1); // January 1st of the specified year
+    const endDate = new Date(year + 1, 0, 0); // December 31st of the specified year
 
     const heatMapArr: HeatMapItem[] = [];
     let currentDate = startDate;
@@ -121,19 +124,20 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return heatMapArr;
-  }, [currentYear])
+  }
 
   /*
   Fill year with past events, -1 to place event on the 0th index
   */
-  const fillYear = useCallback((list: HeatMapItem[]) => {
+  const fillYear = (year:number) => {
+    const list = getDatesForYear(year);
     const responseArr = [...list];
-    const eventsInThisYear = habit.events.filter(event => new Date(event.full_date * 100000).getFullYear() === currentYear);
+    const eventsInThisYear = habit.events.filter(event => new Date(event.full_date * 100000).getFullYear() === year);
     eventsInThisYear.forEach(element => {
       list[element.day_of_year - 1].event = element;
     });
     setFilledList(responseArr);
-  }, [habit, currentYear]);
+  }
 
   const list = filledList.map(heatMapItem => {
     const event = heatMapItem.event;
@@ -143,7 +147,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       -event:yes measure:yes => scale:1-8
     */
     const scale = event ? (habit.measure ? Math.round(
-      (((event.qty-habit.median) / habit.highest_qty)*4)+4) 
+      (((event.qty - habit.median) / habit.highest_qty) * 4) + 4)
       : 6) : 0;
     const color = Colors[habit.color][scale];
 
@@ -165,7 +169,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       boxShadow: heatMapItem.date.getMonth() == hoverMonth ? "0px 0px 4px 3px grey" : "",
       backgroundColor: scale > 0 ? color : ""
     }
-    const child = <div key={heatMapItem.date.valueOf()} className={`item ${selected} `} style={style} onMouseDown={(e) => onMouseDown(e,heatMapItem)}></div>;
+    const child = <div key={heatMapItem.date.valueOf()} className={`item ${selected} `} style={style} onMouseDown={(e) => onMouseDown(e, heatMapItem)}></div>;
     return <Tooltip key={heatMapItem.date.valueOf()} text={tooltipText}>{child}</Tooltip>
   });
 
@@ -190,6 +194,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
             </span>)}
         </div>
         <div className="list" >
+          {[...Array(holesAtYearStart)].map((i) => <div key={i} className="hole"></div>)}
           {list}
         </div>
         <div className="summary">
