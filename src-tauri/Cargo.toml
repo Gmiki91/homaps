@@ -19,6 +19,8 @@ serde_json = "1.0"
 futures = "0.3.30"
 tokio = {version="1.35.1", features = ["rt", "macros"] }
 sqlx = { version = "0.7.3", features = ["runtime-tokio-native-tls", "sqlite"] }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
