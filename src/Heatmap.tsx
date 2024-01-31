@@ -143,11 +143,12 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
     const event = heatMapItem.event;
     /*
       -no event for the tile => scale: 0
-      -event:yes measure:no => scale:6 (middleish)
+      -event:yes measure:no => scale:6 
       -event:yes measure:yes => scale:1-8
     */
-    const scale = event ? (habit.measure ? Math.round(
-      (((event.qty - habit.median) / habit.highest_qty) * 4) + 4)
+    const scale = event ? (habit.measure ? Math.min(Math.max(
+      Math.round((((event.qty - habit.median) / habit.highest_qty) * 8) + 4)
+      ,0),8)
       : 6) : 0;
     const color = Colors[habit.color][scale];
 
