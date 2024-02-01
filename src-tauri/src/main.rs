@@ -8,8 +8,8 @@ use tauri::{Manager};
 
 #[derive(Clone, serde::Serialize)]
 struct Payload {
-  args: Vec<String>,
-  cwd: String,
+    args: Vec<String>,
+    cwd: String,
 }
 
 #[derive(Clone, FromRow, Debug, Deserialize, Serialize)]
@@ -102,17 +102,32 @@ async fn add_event(
     obj: Event,
     oid: u32,
 ) -> Result<HabitOrigin, ()> {
-    sqlx::query(
-        "INSERT INTO events (habit_id, full_date,project, qty,note,day_of_year)VALUES (?,  ?, ?, ?, ?,?)",
-    )
-    .bind(oid)
-    .bind(obj.full_date)
-    .bind(obj.project)
-    .bind(obj.qty)
-    .bind(obj.note)
-    .bind(obj.day_of_year)
-    .execute(&*db)
-    .await;
+    match sqlx::query_as::<_, Event>("SELECT * FROM events WHERE full_date=?")
+        .bind(obj.full_date)
+        .fetch_one(&*db)
+        .await
+    {
+        Ok(_res) => {
+            sqlx::query("UPDATE events SET project=?, qty=?,note=? WHERE full_date=?")
+                .bind(obj.project)
+                .bind(obj.qty)
+                .bind(obj.note)
+                .bind(obj.full_date)
+                .execute(&*db)
+                .await;
+        }
+        Err(_e) => {
+            sqlx::query("INSERT INTO events (habit_id, full_date,project, qty,note,day_of_year)VALUES (?,  ?, ?, ?, ?,?)")
+            .bind(oid)
+        .bind(obj.full_date)
+        .bind(obj.project)
+        .bind(obj.qty)
+        .bind(obj.note)
+        .bind(obj.day_of_year)
+        .execute(&*db)
+        .await;
+        }
+    }
     let mut habit = get_habit_with_updated_median(db.clone(), oid).await;
 
     if obj.qty > habit.highest_qty {
@@ -227,19 +242,25 @@ async fn one_habit(db: tauri::State<'_, SqlitePool>, oid: u32) -> HabitOrigin {
 async fn get_habit_with_updated_median(db: tauri::State<'_, SqlitePool>, oid: u32) -> HabitOrigin {
     let mut habit = one_habit(db.clone(), oid).await;
     if habit.measure {
-        habit.events.sort_by(|a, b| b.qty.cmp(&a.qty));
-        let arr_size = habit.events.len();
         let median;
-        if arr_size % 2 == 0 {
-            median = habit.events[arr_size / 2].qty;
+        if habit.events.len() > 0 {
+            habit.events.sort_by(|a, b| b.qty.cmp(&a.qty));
+            let arr_size = habit.events.len();
+           
+            if arr_size % 2 == 0 {
+                median = habit.events[arr_size / 2].qty;
+            } else {
+                median = habit.events[(arr_size - 1) / 2].qty;
+            }
+           
         } else {
-            median = habit.events[(arr_size - 1) / 2].qty;
+            median=0;
         }
         sqlx::query("UPDATE habits SET median = ? WHERE _id = ?")
-            .bind(median)
-            .bind(oid)
-            .execute(&*db)
-            .await;
+        .bind(median)
+        .bind(oid)
+        .execute(&*db)
+        .await;
     }
     return habit;
 }
@@ -299,7 +320,8 @@ async fn main() {
         ])
         .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
             println!("{}, {argv:?}, {cwd}", app.package_info().name);
-            app.emit_all("single-instance", Payload { args: argv, cwd }).unwrap();
+            app.emit_all("single-instance", Payload { args: argv, cwd })
+                .unwrap();
         }))
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

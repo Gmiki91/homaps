@@ -1,5 +1,8 @@
 import { Color } from "./Colors";
-
+export type HeatMapItem = {
+  date: Date,
+  event: MyEvent | null
+}
 export type MyEvent = {
   full_date: number,
   day_of_year: number,

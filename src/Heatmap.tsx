@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import EventForm from "./EventForm";
-import { MyEvent, Habit } from "./Models";
+import { MyEvent, Habit,HeatMapItem } from "./Models";
 import Tooltip from "./Tooltip";
 import { invoke } from "@tauri-apps/api";
 import { Colors } from "./Colors";
@@ -8,11 +8,6 @@ import { Colors } from "./Colors";
 type Props = {
   habitObj: Habit,
   onRemoveHabit: () => void
-}
-
-type HeatMapItem = {
-  date: Date,
-  event: MyEvent | null
 }
 
 const months = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
@@ -24,13 +19,21 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [hoverMonth, setHoverMonth] = useState(-1);
   const [habit, setHabit] = useState({ ...habitObj });
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedItem, setSelectedItem] = useState<HeatMapItem>({date:new Date(),event:null});
   const [monthlyTotal, setMonthlyTotal] = useState(0);
   const [yearlyTotal, setYearlyTotal] = useState(0);
   const [allTimeTotal, setAllTimeTotal] = useState(0);
   const [holesAtYearStart, setHolesAtYearStart] = useState(0); //0-6 = Sunday-Saturday
 
   useEffect(() => {
+    habitObj.events.every(event => {
+      if(event.full_date == new Date().setHours(12, 0, 0, 0) / 100000){
+        const currentSelectedItem:HeatMapItem = {date:new Date(),event:event};
+        setSelectedItem(currentSelectedItem);
+        return false;
+      }
+      return true;
+    })
     const totalCount = getCounter("alltime", 0, 0);
     setAllTimeTotal(totalCount);
     updateYear(0);
@@ -53,7 +56,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
   const onMouseDown = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>, item: HeatMapItem) => {
     e.preventDefault();
     if (e.button == 0) {
-      setSelectedDate(item.date)
+      setSelectedItem(item)
     } else if (e.button == 2 && item.event) {
       const confirmation = await confirm('Are you sure you wish to delete this item?');
       if (confirmation) {
@@ -65,11 +68,9 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
     return invoke<Habit>('add_event', { obj: event, oid: habitObj._id, })
       .then(response => {
         setHabit(response);
-        return Promise.resolve(true);
       })
       .catch(error => {
         alert(error);
-        return Promise.resolve(false);
       });
   }
 
@@ -146,7 +147,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       -event:yes measure:no => scale:6 
       -event:yes measure:yes => scale:1-8
     */
-    const scale = event ? (habit.measure ? Math.min(Math.max(
+    const scale = event ? (habit.measure && habit.events.length>1 ? Math.min(Math.max(
       Math.round((((event.qty - habit.median) / habit.highest_qty) * 8) + 4)
       ,0),8)
       : 6) : 0;
@@ -165,7 +166,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       tooltipText = `${event.project}\n${tooltipText}`;
     }
 
-    const selected = selectedDate.setHours(0, 0, 0, 0) == heatMapItem.date.getTime() ? "selected" : "";
+    const selected = selectedItem?.date.setHours(0, 0, 0, 0) == heatMapItem.date.getTime() ? "selected" : "";
     const style: { backgroundColor: string, boxShadow: string } = {
       boxShadow: heatMapItem.date.getMonth() == hoverMonth ? "0px 0px 4px 3px grey" : "",
       backgroundColor: scale > 0 ? color : ""
@@ -180,7 +181,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       <h3>{habit.title}</h3>
     </div>
     <div className="row">
-      <EventForm habit={habit} selectedDate={selectedDate} onSubmit={addEvent} ></EventForm>
+      <EventForm habit={habit} selectedItem={selectedItem} onSubmit={addEvent} ></EventForm>
       <div className="container">
         <div className="year_selector">
           <span className="arrow" onClick={() => changeYear(-1)}>&#x2190;</span>
