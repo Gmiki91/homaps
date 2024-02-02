@@ -50,7 +50,9 @@ textarea {
     background-color: $accent-color;
     border-radius: 5%;
     border: none;
-    overflow:hidden;
+    &::-webkit-scrollbar {
+        display: none;
+      }
     &:focus {
         outline: none;
         &::placeholder {
