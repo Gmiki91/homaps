@@ -11,7 +11,7 @@ type FormData = {
   qty: number,
 }
 export default function EventForm({ habit, selectedItem, onSubmit }: Props) {
-  const [formData, setFormData] = useState<FormData>({}as FormData);
+  const [formData, setFormData] = useState<FormData>({} as FormData);
 
   useEffect(() => {
     if (selectedItem.event) {
@@ -20,34 +20,23 @@ export default function EventForm({ habit, selectedItem, onSubmit }: Props) {
         note: selectedItem.event.note,
         qty: selectedItem.event.qty
       })
-    }else{
-     setFormData({ note: "", project: habit.events[habit.events.length - 1]?.project,qty:0});
+    } else {
+      setFormData({ note: "", project: habit.events[habit.events.length - 1]?.project, qty: 0 });
     }
   }, [selectedItem]);
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let error = false;
-    if (!selectedItem.event) {
-      for (let i = 0; i < habit.events.length; i++) {
-        if (habit.events[i].full_date === selectedItem.date.setHours(12, 0, 0, 0) / 100000) {
-          alert("There is already an event on this date.");
-          error = true;
-          break;
-        }
-      }
+    const year = selectedItem.date.getFullYear();
+    const myEvent: MyEvent = {
+      _id:0,
+      full_date: selectedItem.date.setHours(12, 0, 0, 0) / 100000,
+      day_of_year: Math.floor((selectedItem.date.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
+      project: formData.project || "",
+      note: formData.note || "",
+      qty: parseInt('' + formData.qty) || 0,
     }
-    if (!error) {
-      const year = selectedItem.date.getFullYear();
-      const myEvent: MyEvent = {
-        full_date: selectedItem.date.setHours(12, 0, 0, 0) / 100000,
-        day_of_year: Math.floor((selectedItem.date.valueOf() - new Date(year, 0, 0).valueOf()) / (1000 * 60 * 60 * 24)),
-        project: formData.project || "",
-        note: formData.note || "",
-        qty: parseInt('' + formData.qty) || 0,
-      }
-      onSubmit(myEvent);
-    }
+    onSubmit(myEvent);
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {

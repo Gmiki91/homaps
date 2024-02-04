@@ -33,7 +33,8 @@ export default function HabitForm({ onSubmit }: Props) {
       unit: formData.unit || "",
       highest_qty: formData.measure ? 1 : 0,
       median: formData.measure ? 1 : 0,
-      events: []
+      events: [],
+      rank:0
     }
 
     onSubmit(habit).then(success => {

@@ -4,6 +4,7 @@ export type HeatMapItem = {
   event: MyEvent | null
 }
 export type MyEvent = {
+  _id:number,
   full_date: number,
   day_of_year: number,
   project:string,
@@ -11,7 +12,7 @@ export type MyEvent = {
   qty: number,
 }
 export type Habit = {
-  _id?:number,
+  _id:number,
   title:string,
   color:Color,
   events:MyEvent[],
@@ -19,4 +20,5 @@ export type Habit = {
   unit:string
   highest_qty:number;
   median:number;
+  rank:number;
 }

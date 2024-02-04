@@ -60,7 +60,7 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
     } else if (e.button == 2 && item.event) {
       const confirmation = await confirm('Are you sure you wish to delete this item?');
       if (confirmation) {
-        removeEvent(item.event.full_date);
+        removeEvent(item.event._id);
       }
     }
   }
@@ -74,8 +74,8 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       });
   }
 
-  const removeEvent = (eventDate: number) => {
-    invoke<Habit>('remove_event', { fullDate: eventDate, oid: habitObj._id, })
+  const removeEvent = (eventId: number) => {
+    invoke<Habit>('remove_event', { id: eventId, oid: habitObj._id, })
       .then(response => setHabit(response))
       .catch(error => alert(error));
   }
