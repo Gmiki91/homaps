@@ -34,6 +34,9 @@ function Heatmap({ habitObj, onRemoveHabit }: Props) {
       }
       return true;
     })
+  },[])
+
+  useEffect(() => {
     const totalCount = getCounter("alltime", 0, 0);
     setAllTimeTotal(totalCount);
     updateYear(0);
