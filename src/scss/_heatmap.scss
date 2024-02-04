@@ -31,7 +31,7 @@
     .container {
         display: flex;
         align-items: center;
-
+        width:750px;
         .year_selector {
             margin-bottom: 3px;
             .arrow {
@@ -50,6 +50,7 @@
         }
 
         .list {
+            width:100%;
             display: grid;
             grid-gap: 4px;
             grid-template-rows: repeat(7, auto);
